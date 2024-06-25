@@ -5,12 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody playerRb;
+    private Animator playerAnim;
     public GameObject Cam;
-    public float stairForce;
 
-    private float jumpForce = 600;
+    private float stairForce = 200;
+    private float jumpForce = 320;
     private float gravityModifer = 2.5f;
-    private float speed = 250000;
+    private float speed = 270000;
     private float turnSpeed = 50;
 
     private bool isOnGround = true;
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        playerAnim = GetComponent<Animator>();
         Physics.gravity *= gravityModifer;
     }
 
@@ -35,18 +37,30 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             inputVector.x = -1f;
+            playerAnim.SetTrigger("Run_trig");
         }
         if (Input.GetKey(KeyCode.D))
         {
             inputVector.x = 1f;
+            playerAnim.SetTrigger("Run_trig");
         }
-        if (Input.GetKey(KeyCode.W) && !isOnStair)
+        if (Input.GetKey(KeyCode.W))
         {
-            inputVector.y = 1f;
+            if (!isOnStair)
+            {
+                inputVector.y = 1f;
+                playerAnim.SetTrigger("Run_trig");
+            }
+            else if(isOnStair)
+            {
+                playerRb.AddForce(Vector3.up * stairForce, ForceMode.Impulse);
+            }
+            
         }
         if (Input.GetKey(KeyCode.S))
         {
             inputVector.y = -1f;
+            playerAnim.SetTrigger("Run_trig");
         }
         if (Input.GetKey(KeyCode.Space) && isOnGround)
         {
@@ -70,23 +84,28 @@ public class PlayerController : MonoBehaviour
             playerRb.AddForce(moveDir * speed * Time.deltaTime);
             transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
         }
-        Debug.Log(isOnStair);
+
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject)
+        if (collision.gameObject.CompareTag("Stairs"))
+        {
+            isOnStair = true;
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject && !collision.gameObject.CompareTag("Stairs"))
         {
             isOnGround = true;
         }
-        if (collision.gameObject.CompareTag("Stairs") && Input.GetKey(KeyCode.W))
-        {
-            isOnStair = true;
-            if (isOnStair)
-            {
-                playerRb.AddForce(Vector3.up * stairForce * Time.deltaTime);
-            }
-        } else
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Stairs"))
         {
             isOnStair = false;
         }
