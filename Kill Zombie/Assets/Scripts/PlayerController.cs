@@ -8,10 +8,12 @@ public class PlayerController : MonoBehaviour
     private Animator playerAnim;
     public GameObject Cam;
 
-    private float stairForce = 200;
-    private float jumpForce = 320;
+    private Quaternion initialRotation;
+
+    private float stairForce = 120;
+    private float jumpForce = 550;
     private float gravityModifer = 2.5f;
-    private float speed = 270000;
+    private float speed = 250000;
     private float turnSpeed = 50;
 
     private bool isOnGround = true;
@@ -27,6 +29,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        initialRotation = transform.rotation;
         Vector2 inputVector = new Vector2(0, 0);
 
         /* 
@@ -37,19 +40,16 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             inputVector.x = -1f;
-            playerAnim.SetTrigger("Run_trig");
         }
         if (Input.GetKey(KeyCode.D))
         {
             inputVector.x = 1f;
-            playerAnim.SetTrigger("Run_trig");
         }
         if (Input.GetKey(KeyCode.W))
         {
             if (!isOnStair)
             {
                 inputVector.y = 1f;
-                playerAnim.SetTrigger("Run_trig");
             }
             else if(isOnStair)
             {
@@ -60,9 +60,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKey(KeyCode.S))
         {
             inputVector.y = -1f;
-            playerAnim.SetTrigger("Run_trig");
         }
-        if (Input.GetKey(KeyCode.Space) && isOnGround)
+        if (Input.GetKeyDown(KeyCode.Space) && isOnGround)
         {
             playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             // Prevent double-jumping
@@ -74,7 +73,6 @@ public class PlayerController : MonoBehaviour
         offset.y = 0;
         transform.LookAt(transform.position + offset);
 
-        // When player presses left/right/back key, object also rotates same direction.
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
         inputVector = inputVector.normalized;
 
@@ -82,7 +80,14 @@ public class PlayerController : MonoBehaviour
         {
             moveDir = transform.TransformDirection(moveDir);
             playerRb.AddForce(moveDir * speed * Time.deltaTime);
+            // When player presses left/right/back key, object also rotates same direction.
             transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
+
+            playerAnim.SetBool("Run_bool", true);
+        } else
+        {
+            playerAnim.SetBool("Run_bool", false);
+            transform.rotation = initialRotation;
         }
 
     }
