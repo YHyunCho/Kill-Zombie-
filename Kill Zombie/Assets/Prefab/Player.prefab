@@ -769,15 +769,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6532287709753161719}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 14}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -12.77}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 762572030299049652}
   - {fileID: 2917936921328271732}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &9205068290230463449
 Animator:
   serializedVersion: 5
@@ -811,10 +811,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b36a1f32cd86ae34f96b72ca04c865ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
-  turnSpeed: 0
-  horizontalInput: 0
-  forwardInput: 0
+  Cam: {fileID: 0}
+  bulletPrefab: {fileID: 0}
 --- !u!54 &235025031412789591
 Rigidbody:
   m_ObjectHideFlags: 0

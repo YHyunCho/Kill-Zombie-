@@ -6,9 +6,14 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody playerRb;
     private Animator playerAnim;
-    public GameObject Cam;
+    private SwichCamera swichCameraScript;
+
+    public GameObject thirdViewCam;
+    public GameObject firstViewCam;
+    public GameObject bulletPrefab;
 
     private Quaternion initialRotation;
+    private Vector3 shootOffset = new Vector3(0, 1, 0);
 
     private float stairForce = 120;
     private float jumpForce = 550;
@@ -23,6 +28,8 @@ public class PlayerController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
+        swichCameraScript = GameObject.Find("CameraManager").GetComponent<SwichCamera>();
+
         Physics.gravity *= gravityModifer;
     }
 
@@ -36,6 +43,7 @@ public class PlayerController : MonoBehaviour
          Set up movement
          WASD - forward/back/left/right
          Space - Jump
+         Left Mouse Button - shoot
         */
         if (Input.GetKey(KeyCode.A))
         {
@@ -67,29 +75,51 @@ public class PlayerController : MonoBehaviour
             // Prevent double-jumping
             isOnGround = false;
         }
-        
-        // When Camera moves, objects move to same direction.
-        Vector3 offset = Cam.transform.forward;
-        offset.y = 0;
-        transform.LookAt(transform.position + offset);
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Instantiate(bulletPrefab, transform.position + shootOffset, transform.rotation);
+        }
+
+        CameraSight(thirdViewCam);
+        CameraSight(firstViewCam);
 
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
         inputVector = inputVector.normalized;
 
         if (!(inputVector.x == 0 && inputVector.y == 0))
         {
-            moveDir = transform.TransformDirection(moveDir);
-            playerRb.AddForce(moveDir * speed * Time.deltaTime);
-            // When player presses left/right/back key, object also rotates same direction.
-            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
+            //    moveDir = transform.TransformDirection(moveDir);
+            //    playerRb.AddForce(moveDir * speed * Time.deltaTime);
+            //    transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
 
-            playerAnim.SetBool("Run_bool", true);
+            if (swichCameraScript.thirdView.enabled == true)
+            {
+                moveDir = transform.TransformDirection(moveDir);
+                playerRb.AddForce(moveDir * speed * Time.deltaTime);
+                // When player presses left/right/back key, object also rotates same direction.
+                transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
+            }
+            else
+            {
+                playerRb.AddForce(moveDir * speed * Time.deltaTime);
+            }
+
+        playerAnim.SetBool("Run_bool", true);
+
         } else
         {
             playerAnim.SetBool("Run_bool", false);
             transform.rotation = initialRotation;
         }
 
+    }
+
+    void CameraSight(GameObject camera)
+    {
+        // When Camera moves, objects move to same direction.
+        Vector3 offset = camera.transform.forward;
+        offset.y = 0;
+        transform.LookAt(transform.position + offset);
     }
 
     private void OnCollisionEnter(Collision collision)
