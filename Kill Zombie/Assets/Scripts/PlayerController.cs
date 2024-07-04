@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRb;
     private Animator playerAnim;
     private SwichCamera swichCameraScript;
+    private Aiming aimingScript;
 
     public GameObject thirdViewCam;
     public GameObject firstViewCam;
@@ -29,6 +30,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         swichCameraScript = GameObject.Find("CameraManager").GetComponent<SwichCamera>();
+        aimingScript = GameObject.Find("FirstViewCam").GetComponent<Aiming>();
 
         Physics.gravity *= gravityModifer;
     }
@@ -75,7 +77,7 @@ public class PlayerController : MonoBehaviour
             // Prevent double-jumping
             isOnGround = false;
         }
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && swichCameraScript.firstView.enabled == true)
         {
             Instantiate(bulletPrefab, transform.position + shootOffset, transform.rotation);
         }
@@ -85,33 +87,16 @@ public class PlayerController : MonoBehaviour
 
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
         inputVector = inputVector.normalized;
+        moveDir = transform.TransformDirection(moveDir);
 
-        if (!(inputVector.x == 0 && inputVector.y == 0))
+        if (swichCameraScript.thirdView.enabled == true)
         {
-            //    moveDir = transform.TransformDirection(moveDir);
-            //    playerRb.AddForce(moveDir * speed * Time.deltaTime);
-            //    transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
-
-            if (swichCameraScript.thirdView.enabled == true)
-            {
-                moveDir = transform.TransformDirection(moveDir);
-                playerRb.AddForce(moveDir * speed * Time.deltaTime);
-                // When player presses left/right/back key, object also rotates same direction.
-                transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
-            }
-            else
-            {
-                playerRb.AddForce(moveDir * speed * Time.deltaTime);
-            }
-
-        playerAnim.SetBool("Run_bool", true);
-
-        } else
-        {
-            playerAnim.SetBool("Run_bool", false);
-            transform.rotation = initialRotation;
+            ThirdViewMovement(inputVector, moveDir);
         }
-
+        else
+        {
+            FirstViewMoveMent(inputVector, moveDir);
+        }
     }
 
     void CameraSight(GameObject camera)
@@ -144,5 +129,38 @@ public class PlayerController : MonoBehaviour
         {
             isOnStair = false;
         }
+    }
+
+    void ThirdViewMovement(Vector3 inputVector, Vector3 moveDir)
+    {
+        if (!(inputVector.x == 0 && inputVector.y == 0))
+        {
+            playerAnim.SetBool("Run_bool", true);
+
+            playerRb.AddForce(moveDir * speed * Time.deltaTime);
+            transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
+        }
+        else
+        {
+            playerAnim.SetBool("Run_bool", false);
+            transform.rotation = initialRotation;
+        }
+    }
+
+    void FirstViewMoveMent(Vector3 inputVector, Vector3 moveDir)
+    {
+
+        if (!(inputVector.x == 0 && inputVector.y == 0))
+        {
+            //playerAnim.SetBool("Run_bool", true);
+
+            playerRb.AddForce(moveDir * speed * Time.deltaTime);
+        }
+        else
+        {
+            //playerAnim.SetBool("Run_bool", false);
+            transform.rotation = initialRotation;
+        }
+        transform.rotation = Quaternion.Euler(0, aimingScript.mouseXInput, 0);
     }
 }

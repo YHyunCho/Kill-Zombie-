@@ -9,11 +9,12 @@ TagManager:
   - Building
   - Zombie
   - Bullet
+  - BackGround
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Crosshair
   - Water
   - UI
   - 

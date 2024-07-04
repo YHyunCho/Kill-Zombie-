@@ -7,7 +7,9 @@ public class Aiming : MonoBehaviour
     public GameObject player;
     public GameObject thirdViewCam;
 
-    private float turnSpeed = 400;
+    public float mouseXInput;
+    public float mouseYInput;
+
     private Vector3 offset = new Vector3(0.017f, -1.1f, -0.12f);
 
     private void Start()
@@ -17,6 +19,10 @@ public class Aiming : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        mouseXInput += Input.GetAxis("Mouse X");
+        mouseYInput -= Input.GetAxis("Mouse Y");
+        transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
+
         transform.position = player.transform.position - transform.rotation * offset;
 
         Vector3 thirdToFirst = thirdViewCam.transform.forward;
