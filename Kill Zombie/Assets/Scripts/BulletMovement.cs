@@ -5,6 +5,7 @@ using UnityEngine;
 public class BulletMovement : MonoBehaviour
 {
     private SpawnManager spawnScript;
+    public Camera shootCamera;
 
     public float speed;
 
@@ -12,15 +13,21 @@ public class BulletMovement : MonoBehaviour
     private float xPosRange = 9.8f;
     private float zPosRange = 14.8f;
 
+    private Vector3 middleOfCamera = new Vector3(0.5f, 0.5f, 0);
+
     void Start()
     {
         spawnScript = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        //ray = new Ray(middleOfCamera, Vector3.forward); 
+        //ray = shootCamera.ViewportPointToRay(middleOfCamera);
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        Ray ray = new Ray(shootCamera.transform.position, shootCamera.transform.forward);
+        //transform.position += ray.direction * speed * Time.deltaTime;
+        transform.Translate(ray.direction * speed * Time.deltaTime);
 
         DestroyOutOfBound();
         

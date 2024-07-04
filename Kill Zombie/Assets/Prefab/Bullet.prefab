@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2fa6a7417405a448a1128b23e378599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shootCamera: {fileID: 6962444424063408926, guid: a3e5fce49e7796d46908ef696dd75bd2, type: 3}
   speed: 20
 --- !u!136 &4686969987062532781
 CapsuleCollider:

@@ -19,14 +19,14 @@ public class Aiming : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
+        Vector3 thirdToFirst = thirdViewCam.transform.forward;
+        thirdToFirst.y = 0;
+        transform.LookAt(transform.position + thirdToFirst);
+
         mouseXInput += Input.GetAxis("Mouse X");
         mouseYInput -= Input.GetAxis("Mouse Y");
         transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
 
         transform.position = player.transform.position - transform.rotation * offset;
-
-        Vector3 thirdToFirst = thirdViewCam.transform.forward;
-        thirdToFirst.y = 0;
-        transform.LookAt(transform.position + thirdToFirst);
     }
 }

@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public GameObject bulletPrefab;
 
     private Quaternion initialRotation;
-    private Vector3 shootOffset = new Vector3(0, 1, 0);
+    private Vector3 shootOffset = new Vector3(0, 1, 1);
 
     private float stairForce = 120;
     private float jumpForce = 550;
@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private float speed = 250000;
     private float turnSpeed = 50;
 
+    public bool gameOver;
     private bool isOnGround = true;
     private bool isOnStair;
 
@@ -37,6 +38,14 @@ public class PlayerController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+    {
+        if (gameOver == false)
+        {
+            PlayerMovement();
+        }
+    }
+
+    void PlayerMovement()
     {
         initialRotation = transform.rotation;
         Vector2 inputVector = new Vector2(0, 0);
@@ -61,11 +70,11 @@ public class PlayerController : MonoBehaviour
             {
                 inputVector.y = 1f;
             }
-            else if(isOnStair)
+            else if (isOnStair)
             {
                 playerRb.AddForce(Vector3.up * stairForce, ForceMode.Impulse);
             }
-            
+
         }
         if (Input.GetKey(KeyCode.S))
         {
@@ -112,15 +121,20 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Stairs"))
         {
             isOnStair = true;
-        }
-    }
+            isOnGround = false;
 
-    private void OnCollisionStay(Collision collision)
-    {
-        if (collision.gameObject && !collision.gameObject.CompareTag("Stairs"))
+        } else if (!collision.gameObject.CompareTag("Stairs"))
         {
             isOnGround = true;
         }
+
+        //if (collision.gameObject.CompareTag("Zombie"))
+        //{
+        //    gameOver = true;
+        //    playerRb.velocity = Vector3.zero;
+        //    playerAnim.SetBool("Run_bool", false);
+        //    Debug.Log("GAME OVER");
+        //}
     }
 
     private void OnCollisionExit(Collision collision)
