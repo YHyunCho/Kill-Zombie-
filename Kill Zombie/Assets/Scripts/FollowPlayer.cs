@@ -12,7 +12,7 @@ public class FollowPlayer : MonoBehaviour
 
     public float turnSpeed;
     private Vector3 mainCamOffset = new Vector3(0, -1.4f, 2.4f);
-    private Vector3 deathCamOffset = new Vector3(0, 2.3f, 10f);
+    private Vector3 deathCamOffset = new Vector3(0, 2.3f, 1.5f);
 
     void Start()
     {
@@ -25,25 +25,20 @@ public class FollowPlayer : MonoBehaviour
 
         if (swichCameraScript.thirdView.enabled == true)
         {
-            FirstViewCamera();
+            NonDeathViewCamera();
 
         } else if (swichCameraScript.deathView.enabled == true)
         {
             DeathViewCamera();
         }
 
-        //mouseXInput += Input.GetAxis("Mouse X");
-        //mouseYInput -= Input.GetAxis("Mouse Y");
-        //transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
-
-        //transform.position = player.transform.position - transform.rotation * offset;
-
     }
 
-    void FirstViewCamera()
+    void NonDeathViewCamera()
     {
         mouseXInput += Input.GetAxis("Mouse X");
         mouseYInput -= Input.GetAxis("Mouse Y");
+
         transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
 
         transform.position = player.transform.position - transform.rotation * mainCamOffset;
@@ -52,7 +47,7 @@ public class FollowPlayer : MonoBehaviour
     void DeathViewCamera()
     {
         transform.position = player.transform.position + deathCamOffset;
-        transform.rotation = Quaternion.Euler(40, 180, 0);
+        transform.rotation = Quaternion.Euler(45, 180, 0);
     }
 
 }

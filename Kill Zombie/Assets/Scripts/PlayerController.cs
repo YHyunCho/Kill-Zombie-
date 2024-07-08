@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public GameObject bulletPrefab;
 
     private Quaternion initialRotation;
+    private Quaternion lookForward;
     private Vector3 shootOffset = new Vector3(0, 1, 1);
 
     private float stairForce = 120;
@@ -39,23 +40,62 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (gameOver == false)
+        if (gameOver)
         {
-            PlayerMovement();
+            playerRb.velocity = Vector3.zero;
+        }
+        else 
+        {
+            initialRotation = transform.rotation;
+            lookForward = firstViewCam.transform.rotation;
+
+            Vector2 userInput = PlayerMovement();
+            Vector3 moveDir = new Vector3(userInput.x, 0, userInput.y);
+            moveDir = transform.TransformDirection(moveDir);
+
+            if (swichCameraScript.thirdView.enabled == true)
+            {
+                ThirdViewMovement(userInput, moveDir);
+            }
+            else
+            {
+                FirstViewMovement(userInput, moveDir);
+                ShootWeapon();
+            }
+        }
+    }
+    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Stairs"))
+        {
+            isOnStair = true;
+            isOnGround = false;
+        }
+        else if (!collision.gameObject.CompareTag("Stairs"))
+        {
+            isOnGround = true;
+        }
+        if (collision.gameObject.CompareTag("Zombie"))
+        {
+            gameOver = true;
+            playerAnim.SetBool("Run_bool", false);
+            Debug.Log("GAME OVER");
         }
     }
 
-    void PlayerMovement()
+    private void OnCollisionExit(Collision collision)
     {
-        initialRotation = transform.rotation;
+        if (collision.gameObject.CompareTag("Stairs"))
+        {
+            isOnStair = false;
+        }
+    }
+
+    Vector2 PlayerMovement()
+    {
         Vector2 inputVector = new Vector2(0, 0);
 
-        /* 
-         Set up movement
-         WASD - forward/back/left/right
-         Space - Jump
-         Left Mouse Button - shoot
-        */
         if (Input.GetKey(KeyCode.A))
         {
             inputVector.x = -1f;
@@ -74,7 +114,6 @@ public class PlayerController : MonoBehaviour
             {
                 playerRb.AddForce(Vector3.up * stairForce, ForceMode.Impulse);
             }
-
         }
         if (Input.GetKey(KeyCode.S))
         {
@@ -86,63 +125,20 @@ public class PlayerController : MonoBehaviour
             // Prevent double-jumping
             isOnGround = false;
         }
-        if (Input.GetKeyDown(KeyCode.Mouse0) && swichCameraScript.firstView.enabled == true)
-        {
-            Instantiate(bulletPrefab, transform.position + shootOffset, transform.rotation);
-        }
-
-        CameraSight(thirdViewCam);
-        CameraSight(firstViewCam);
-
-        Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
         inputVector = inputVector.normalized;
-        moveDir = transform.TransformDirection(moveDir);
 
-        if (swichCameraScript.thirdView.enabled == true)
-        {
-            ThirdViewMovement(inputVector, moveDir);
-        }
-        else
-        {
-            FirstViewMoveMent(inputVector, moveDir);
-        }
+        FaceCameraDirection(thirdViewCam);
+        FaceCameraDirection(firstViewCam);
+
+        return inputVector;
     }
 
-    void CameraSight(GameObject camera)
+    void FaceCameraDirection(GameObject camera)
     {
         // When Camera moves, objects move to same direction.
         Vector3 offset = camera.transform.forward;
         offset.y = 0;
         transform.LookAt(transform.position + offset);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Stairs"))
-        {
-            isOnStair = true;
-            isOnGround = false;
-
-        } else if (!collision.gameObject.CompareTag("Stairs"))
-        {
-            isOnGround = true;
-        }
-
-        //if (collision.gameObject.CompareTag("Zombie"))
-        //{
-        //    gameOver = true;
-        //    playerRb.velocity = Vector3.zero;
-        //    playerAnim.SetBool("Run_bool", false);
-        //    Debug.Log("GAME OVER");
-        //}
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Stairs"))
-        {
-            isOnStair = false;
-        }
     }
 
     void ThirdViewMovement(Vector3 inputVector, Vector3 moveDir)
@@ -161,20 +157,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FirstViewMoveMent(Vector3 inputVector, Vector3 moveDir)
+    void FirstViewMovement(Vector3 inputVector, Vector3 moveDir)
     {
-
         if (!(inputVector.x == 0 && inputVector.y == 0))
         {
-            //playerAnim.SetBool("Run_bool", true);
-
             playerRb.AddForce(moveDir * speed * Time.deltaTime);
         }
         else
         {
-            //playerAnim.SetBool("Run_bool", false);
-            transform.rotation = initialRotation;
+            transform.rotation = lookForward;
         }
-        transform.rotation = Quaternion.Euler(0, aimingScript.mouseXInput, 0);
+        transform.rotation = Quaternion.Euler(aimingScript.mouseYInput, aimingScript.mouseXInput, 0);
+    }
+
+    void ShootWeapon()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Instantiate(bulletPrefab, transform.position + shootOffset, transform.rotation);
+        }
     }
 }

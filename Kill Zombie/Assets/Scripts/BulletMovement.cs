@@ -18,17 +18,27 @@ public class BulletMovement : MonoBehaviour
     void Start()
     {
         spawnScript = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        //ray = new Ray(middleOfCamera, Vector3.forward); 
-        //ray = shootCamera.ViewportPointToRay(middleOfCamera);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Ray ray = new Ray(shootCamera.transform.position, shootCamera.transform.forward);
-        //transform.position += ray.direction * speed * Time.deltaTime;
-        transform.Translate(ray.direction * speed * Time.deltaTime);
+        Ray ray = shootCamera.ViewportPointToRay(middleOfCamera);
+        RaycastHit hit;
 
+        Vector3 targetPoint;
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(1000); 
+        }
+
+        Vector3 direction = targetPoint - transform.position;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.velocity = direction.normalized * speed;
         DestroyOutOfBound();
         
     }
