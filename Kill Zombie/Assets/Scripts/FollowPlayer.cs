@@ -22,7 +22,6 @@ public class FollowPlayer : MonoBehaviour
     // Update is called once per frame
     void LateUpdate()
     {
-
         if (swichCameraScript.thirdView.enabled == true)
         {
             NonDeathViewCamera();
@@ -31,7 +30,6 @@ public class FollowPlayer : MonoBehaviour
         {
             DeathViewCamera();
         }
-
     }
 
     void NonDeathViewCamera()

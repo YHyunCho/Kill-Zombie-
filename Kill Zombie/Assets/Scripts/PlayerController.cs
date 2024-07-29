@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private float jumpForce = 550;
     private float gravityModifer = 2.5f;
     private float speed = 250000;
-    private float turnSpeed = 50;
+    [SerializeField] private float turnSpeed = 50;
 
     public bool gameOver;
     private bool isOnGround = true;
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (gameOver)
         {
@@ -161,10 +161,12 @@ public class PlayerController : MonoBehaviour
     {
         if (!(inputVector.x == 0 && inputVector.y == 0))
         {
+            playerAnim.SetBool("Run_bool", true);
             playerRb.AddForce(moveDir * speed * Time.deltaTime);
         }
         else
         {
+            playerAnim.SetBool("Run_bool", false);
             transform.rotation = lookForward;
         }
         transform.rotation = Quaternion.Euler(aimingScript.mouseYInput, aimingScript.mouseXInput, 0);
