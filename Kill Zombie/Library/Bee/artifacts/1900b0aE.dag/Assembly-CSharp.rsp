@@ -360,14 +360,12 @@
 "Assets/Library/Zombie/Scripts/ZombieCameraLogic.cs"
 "Assets/Library/Zombie/Scripts/ZombieCharacterControl.cs"
 "Assets/Library/Zombie/Scripts/ZombieFree.cs"
-"Assets/Scripts/Aiming.cs"
 "Assets/Scripts/BulletMovement.cs"
-"Assets/Scripts/FollowPlayer.cs"
+"Assets/Scripts/CameraHandler.cs"
+"Assets/Scripts/GameManager.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/SpawnManager.cs"
-"Assets/Scripts/SwichCamera.cs"
 "Assets/Scripts/ZombieMovement.cs"
-"Assets/Scripts/ZombieSight.cs"
 -langversion:9.0
 /deterministic
 /optimize+

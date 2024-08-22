@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7303662308791687276}
   - component: {fileID: 7572757884473584739}
   - component: {fileID: 4748865210720589975}
-  - component: {fileID: 8416969774653852324}
   m_Layer: 0
   m_Name: ThridViewCam
   m_TagString: MainCamera
@@ -94,20 +93,6 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 166958302460296217}
   m_Enabled: 1
---- !u!114 &8416969774653852324
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 166958302460296217}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44c553cd907b71f49acbdffd72e0f32b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  turnSpeed: 400
 --- !u!1 &4913660660766838503
 GameObject:
   m_ObjectHideFlags: 0

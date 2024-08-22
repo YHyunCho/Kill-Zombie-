@@ -4,44 +4,53 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody playerRb;
-    private Animator playerAnim;
-    private SwichCamera swichCameraScript;
-    private Aiming aimingScript;
+    protected CameraHandler updateView;
 
-    public GameObject thirdViewCam;
-    public GameObject firstViewCam;
+    protected Rigidbody playerRb;
+    protected Animator playerAnim;
+
+    public Camera thirdViewCam;
+    public Camera firstViewCam;
     public GameObject bulletPrefab;
 
-    private Quaternion initialRotation;
-    private Quaternion lookForward;
+    protected Quaternion initialRotation;
+    protected Quaternion lookForward;
     private Vector3 shootOffset = new Vector3(0, 1, 1);
+    protected Vector3 camOffset = new Vector3(-0.12f, 0.11f, 0);
 
-    private float stairForce = 120;
-    private float jumpForce = 550;
-    private float gravityModifer = 2.5f;
-    private float speed = 250000;
-    [SerializeField] private float turnSpeed = 50;
+    protected float stairForce = 120;
+    protected float jumpForce = 550;
+    protected float gravityModifer = 2.5f;
+    protected float speed = 250000;
+    protected float turnSpeed = 50;
+    protected float xRotation;
+    protected float yRotation;
+    protected float mouseX;
+    protected float mouseY;
 
-    public bool gameOver;
-    private bool isOnGround = true;
-    private bool isOnStair;
+    protected bool isOnGround = true;
+    protected bool isOnStair;
+    private bool isFirstPerson = false;
+
+    protected float h;
+    protected float v;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
-        swichCameraScript = GameObject.Find("CameraManager").GetComponent<SwichCamera>();
-        aimingScript = GameObject.Find("FirstViewCam").GetComponent<Aiming>();
-
+        updateView = GameObject.Find("Cameras").GetComponent<CameraHandler>();
+        
+        playerRb.freezeRotation = true;
         Physics.gravity *= gravityModifer;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (gameOver)
+        if (!GameManager.Instance.isGameActive)
         {
+            updateView.DeathViewCameraOn();
             playerRb.velocity = Vector3.zero;
         }
         else 
@@ -49,18 +58,20 @@ public class PlayerController : MonoBehaviour
             initialRotation = transform.rotation;
             lookForward = firstViewCam.transform.rotation;
 
-            Vector2 userInput = PlayerMovement();
-            Vector3 moveDir = new Vector3(userInput.x, 0, userInput.y);
-            moveDir = transform.TransformDirection(moveDir);
-
-            if (swichCameraScript.thirdView.enabled == true)
+            if (Input.GetMouseButton(1))
             {
-                ThirdViewMovement(userInput, moveDir);
-            }
-            else
+                isFirstPerson = true;
+                updateView.FirstViewCameraOn();
+                FirstPersonControl();
+            } else
             {
-                FirstViewMovement(userInput, moveDir);
-                ShootWeapon();
+                updateView.ThirdViewCameraOn();
+                if(isFirstPerson)
+                {
+                    isFirstPerson = false;
+                    updateView.AfterMouseUp(firstViewCam.transform.rotation);
+                }
+                ThirdPersonControl();
             }
         }
     }
@@ -78,7 +89,7 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Zombie"))
         {
-            gameOver = true;
+            GameManager.Instance.isGameActive = false;
             playerAnim.SetBool("Run_bool", false);
             Debug.Log("GAME OVER");
         }
@@ -90,6 +101,60 @@ public class PlayerController : MonoBehaviour
         {
             isOnStair = false;
         }
+    }
+ 
+    private void FirstPersonControl()
+    {
+        FirstviewRotate();
+        FirstViewMove();
+
+    }
+
+    void FirstviewRotate()
+    {
+        mouseX = Input.GetAxis("Mouse X") * turnSpeed * Time.deltaTime;
+        mouseY = Input.GetAxis("Mouse Y") * turnSpeed * Time.deltaTime;
+
+        xRotation -= mouseY;
+        yRotation += mouseX;
+
+        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+
+        firstViewCam.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        transform.rotation = Quaternion.Euler(0, yRotation, 0);
+
+        FaceCameraDirection(thirdViewCam);
+
+        Vector3 thirdToFirst = transform.forward;
+        thirdToFirst.y = 0;
+        firstViewCam.transform.LookAt(firstViewCam.transform.position + thirdToFirst);
+    }
+
+    void FirstViewMove()
+    {
+        h = Input.GetAxisRaw("Horizontal"); 
+        v = Input.GetAxisRaw("Vertical");   
+
+        Vector3 moveVec = transform.forward * v + transform.right * h;
+
+        if (!(h == 0 && v == 0))
+        {
+            playerAnim.SetBool("Run_bool", true);
+            playerRb.AddForce(moveVec * speed * Time.deltaTime);
+        }
+        else
+        {
+            playerAnim.SetBool("Run_bool", false);
+        }
+    }
+
+    private void ThirdPersonControl()
+    {
+        Vector2 userInput = PlayerMovement();
+        Vector3 moveDir = new Vector3(userInput.x, 0, userInput.y);
+        moveDir = transform.TransformDirection(moveDir);
+
+        ThirdViewMovement(userInput, moveDir);
     }
 
     Vector2 PlayerMovement()
@@ -128,12 +193,11 @@ public class PlayerController : MonoBehaviour
         inputVector = inputVector.normalized;
 
         FaceCameraDirection(thirdViewCam);
-        FaceCameraDirection(firstViewCam);
 
         return inputVector;
     }
 
-    void FaceCameraDirection(GameObject camera)
+    void FaceCameraDirection(Camera camera)
     {
         // When Camera moves, objects move to same direction.
         Vector3 offset = camera.transform.forward;
@@ -157,26 +221,4 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FirstViewMovement(Vector3 inputVector, Vector3 moveDir)
-    {
-        if (!(inputVector.x == 0 && inputVector.y == 0))
-        {
-            playerAnim.SetBool("Run_bool", true);
-            playerRb.AddForce(moveDir * speed * Time.deltaTime);
-        }
-        else
-        {
-            playerAnim.SetBool("Run_bool", false);
-            transform.rotation = lookForward;
-        }
-        transform.rotation = Quaternion.Euler(aimingScript.mouseYInput, aimingScript.mouseXInput, 0);
-    }
-
-    void ShootWeapon()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            Instantiate(bulletPrefab, transform.position + shootOffset, transform.rotation);
-        }
-    }
 }
