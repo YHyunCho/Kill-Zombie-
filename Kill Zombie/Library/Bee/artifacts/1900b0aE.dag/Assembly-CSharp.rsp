@@ -360,6 +360,7 @@
 "Assets/Library/Zombie/Scripts/ZombieCameraLogic.cs"
 "Assets/Library/Zombie/Scripts/ZombieCharacterControl.cs"
 "Assets/Library/Zombie/Scripts/ZombieFree.cs"
+"Assets/Scripts/Bullet.cs"
 "Assets/Scripts/BulletMovement.cs"
 "Assets/Scripts/CameraHandler.cs"
 "Assets/Scripts/GameManager.cs"

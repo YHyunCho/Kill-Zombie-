@@ -10,13 +10,13 @@ public class PlayerController : MonoBehaviour
     protected Animator playerAnim;
 
     public Camera thirdViewCam;
-    public Camera firstViewCam;
+    public GameObject firstViewCam;
     public GameObject bulletPrefab;
 
     protected Quaternion initialRotation;
     protected Quaternion lookForward;
-    private Vector3 shootOffset = new Vector3(0, 1, 1);
     protected Vector3 camOffset = new Vector3(-0.12f, 0.11f, 0);
+    private Vector3 bulletOffset = new Vector3(0.181f, 0.696f, 1);
 
     protected float stairForce = 120;
     protected float jumpForce = 550;
@@ -63,6 +63,11 @@ public class PlayerController : MonoBehaviour
                 isFirstPerson = true;
                 updateView.FirstViewCameraOn();
                 FirstPersonControl();
+
+                //if(Input.GetMouseButtonDown(0))
+                //{
+                //    Instantiate(bulletPrefab, transform.position + bulletOffset, bulletPrefab.transform.rotation);
+                //}
             } else
             {
                 updateView.ThirdViewCameraOn();
@@ -109,6 +114,13 @@ public class PlayerController : MonoBehaviour
         FirstViewMove();
 
     }
+    void FaceCameraDirection(Vector3 followObjectForward, GameObject playerOrCamera)
+    {
+        // When Camera moves, objects move to same direction.
+        Vector3 offset = followObjectForward;
+        offset.y = 0;
+        playerOrCamera.transform.LookAt(playerOrCamera.transform.position + offset);
+    }
 
     void FirstviewRotate()
     {
@@ -123,11 +135,12 @@ public class PlayerController : MonoBehaviour
         firstViewCam.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         transform.rotation = Quaternion.Euler(0, yRotation, 0);
 
-        FaceCameraDirection(thirdViewCam);
+        FaceCameraDirection(thirdViewCam.transform.forward, gameObject);
+        FaceCameraDirection(transform.forward, firstViewCam);
 
-        Vector3 thirdToFirst = transform.forward;
-        thirdToFirst.y = 0;
-        firstViewCam.transform.LookAt(firstViewCam.transform.position + thirdToFirst);
+        //Vector3 thirdToFirst = transform.forward;
+        //thirdToFirst.y = 0;
+        //firstViewCam.transform.LookAt(firstViewCam.transform.position + thirdToFirst);
     }
 
     void FirstViewMove()
@@ -192,18 +205,11 @@ public class PlayerController : MonoBehaviour
         }
         inputVector = inputVector.normalized;
 
-        FaceCameraDirection(thirdViewCam);
+        FaceCameraDirection(thirdViewCam.transform.forward, gameObject);
 
         return inputVector;
     }
 
-    void FaceCameraDirection(Camera camera)
-    {
-        // When Camera moves, objects move to same direction.
-        Vector3 offset = camera.transform.forward;
-        offset.y = 0;
-        transform.LookAt(transform.position + offset);
-    }
 
     void ThirdViewMovement(Vector3 inputVector, Vector3 moveDir)
     {
