@@ -343,6 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGameActive: 1
+  isHitByBullet: 0
   currentCamera: 
 --- !u!4 &645356635
 Transform:
@@ -851,6 +852,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
+      propertyPath: range
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
+      propertyPath: zombie
+      value: 
+      objectReference: {fileID: 6763907651135187018, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
     - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
       propertyPath: firstViewCam
       value: 

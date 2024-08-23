@@ -11,12 +11,10 @@ public class PlayerController : MonoBehaviour
 
     public Camera thirdViewCam;
     public GameObject firstViewCam;
-    public GameObject bulletPrefab;
 
     protected Quaternion initialRotation;
     protected Quaternion lookForward;
     protected Vector3 camOffset = new Vector3(-0.12f, 0.11f, 0);
-    private Vector3 bulletOffset = new Vector3(0.181f, 0.696f, 1);
 
     protected float stairForce = 120;
     protected float jumpForce = 550;
@@ -30,10 +28,12 @@ public class PlayerController : MonoBehaviour
 
     protected bool isOnGround = true;
     protected bool isOnStair;
-    private bool isFirstPerson = false;
+    [SerializeField]private bool isFirstPerson = false;
 
     protected float h;
     protected float v;
+
+    public float range;
 
     void Start()
     {
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (!GameManager.Instance.isGameActive)
         {
@@ -60,14 +60,20 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetMouseButton(1))
             {
-                isFirstPerson = true;
                 updateView.FirstViewCameraOn();
+                if (!isFirstPerson)
+                {
+                    isFirstPerson = true;
+                    ThirdToFirst();
+                }
                 FirstPersonControl();
+                //FaceCameraDirection(transform.forward, firstViewCam);
 
-                //if(Input.GetMouseButtonDown(0))
-                //{
-                //    Instantiate(bulletPrefab, transform.position + bulletOffset, bulletPrefab.transform.rotation);
-                //}
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Shoot();
+                    playerAnim.SetTrigger("Shoot_trig");
+                }
             } else
             {
                 updateView.ThirdViewCameraOn();
@@ -77,10 +83,41 @@ public class PlayerController : MonoBehaviour
                     updateView.AfterMouseUp(firstViewCam.transform.rotation);
                 }
                 ThirdPersonControl();
+
             }
         }
     }
-    
+
+    private void ThirdToFirst()
+    {
+        mouseX = thirdViewCam.transform.rotation.eulerAngles.y;
+        mouseY = thirdViewCam.transform.rotation.eulerAngles.x;
+
+        transform.rotation = thirdViewCam.transform.rotation;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(firstViewCam.transform.position, firstViewCam.transform.forward * range);
+    }
+
+    public void Shoot()
+    {
+        RaycastHit hit;
+        
+        if (Physics.Raycast(firstViewCam.transform.position, firstViewCam.transform.forward, out hit, range))
+        {
+            Debug.Log(hit.collider.name);
+            if(hit.collider.tag == "Zombie")
+            {
+                ZombieController shootzombie = hit.collider.GetComponent<ZombieController>();
+                shootzombie.OnHit();
+                //Destroy(hit.collider.gameObject);
+            }
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Stairs"))
@@ -112,8 +149,8 @@ public class PlayerController : MonoBehaviour
     {
         FirstviewRotate();
         FirstViewMove();
-
     }
+
     void FaceCameraDirection(Vector3 followObjectForward, GameObject playerOrCamera)
     {
         // When Camera moves, objects move to same direction.
@@ -132,15 +169,8 @@ public class PlayerController : MonoBehaviour
 
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        firstViewCam.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         transform.rotation = Quaternion.Euler(0, yRotation, 0);
-
-        FaceCameraDirection(thirdViewCam.transform.forward, gameObject);
-        FaceCameraDirection(transform.forward, firstViewCam);
-
-        //Vector3 thirdToFirst = transform.forward;
-        //thirdToFirst.y = 0;
-        //firstViewCam.transform.LookAt(firstViewCam.transform.position + thirdToFirst);
+        firstViewCam.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
     }
 
     void FirstViewMove()

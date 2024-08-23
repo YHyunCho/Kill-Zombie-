@@ -924,7 +924,7 @@ GameObject:
   - component: {fileID: 7654312809880372743}
   - component: {fileID: 8421835893767205029}
   - component: {fileID: 4762687205714855165}
-  - component: {fileID: 6233033940178225397}
+  - component: {fileID: -2070348377208347416}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Zombie
@@ -940,7 +940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6763907651135187018}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.4539906, z: 0, w: -0.8910065}
+  m_LocalRotation: {x: 0, y: 0.95881975, z: 0, w: 0.28401533}
   m_LocalPosition: {x: 0, y: 0, z: 11}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -959,7 +959,7 @@ Animator:
   m_GameObject: {fileID: 6763907651135187018}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 8c53cffd52097cf4582f0a090c9a833e, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c929656c07909194ab8a5cd79f5f371d, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1018,7 +1018,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.3582083, y: 0.97110534, z: 0.34599733}
   m_Center: {x: -0.000090532005, y: 0.5237422, z: 0.011639357}
---- !u!114 &6233033940178225397
+--- !u!114 &-2070348377208347416
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1027,10 +1027,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6763907651135187018}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af41ab5974332d64683551fa64dc5e8d, type: 3}
+  m_Script: {fileID: 11500000, guid: e8d066ce0e971a048bb77dfd0eefae52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3
 --- !u!1 &8168935403997999339
 GameObject:
   m_ObjectHideFlags: 0
