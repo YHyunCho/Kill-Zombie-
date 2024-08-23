@@ -4,36 +4,43 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    protected CameraHandler updateView;
+    private CameraHandler updateView;
 
-    protected Rigidbody playerRb;
-    protected Animator playerAnim;
+    private Rigidbody playerRb;
+    private Animator playerAnim;
 
     public Camera thirdViewCam;
     public GameObject firstViewCam;
+    public Transform zombiePerfab;
 
-    protected Quaternion initialRotation;
-    protected Quaternion lookForward;
-    protected Vector3 camOffset = new Vector3(-0.12f, 0.11f, 0);
+    private float gravityModifer = 2.5f;
 
-    protected float stairForce = 120;
-    protected float jumpForce = 550;
-    protected float gravityModifer = 2.5f;
-    protected float speed = 250000;
-    protected float turnSpeed = 50;
-    protected float xRotation;
-    protected float yRotation;
-    protected float mouseX;
-    protected float mouseY;
+    // Camera Variables
+    private bool isFirstPerson = false;
 
-    protected bool isOnGround = true;
-    protected bool isOnStair;
-    [SerializeField]private bool isFirstPerson = false;
+    // Common Variables 
+    private float speed = 250000;
+    private float turnSpeed = 50;
 
-    protected float h;
-    protected float v;
+    // Third Person Variables
+    private Quaternion initialRotation;
+    private float stairForce = 120;
+    private float jumpForce = 550;
 
-    public float range;
+    // First Person Variables
+    private float xRotation;
+    private float yRotation;
+    private float mouseX;
+    private float mouseY;
+    private float horizontalInput;
+    private float verticalInput;
+
+    // Collision Detection Variables
+    private bool isOnGround = true;
+    private bool isOnStair;
+
+    // Player Shooting Variable
+    private float range = 30;
 
     void Start()
     {
@@ -45,29 +52,28 @@ public class PlayerController : MonoBehaviour
         Physics.gravity *= gravityModifer;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!GameManager.Instance.isGameActive)
         {
-            updateView.DeathViewCameraOn();
+            updateView.ActivateDeathCamera();
             playerRb.velocity = Vector3.zero;
         }
         else 
         {
             initialRotation = transform.rotation;
-            lookForward = firstViewCam.transform.rotation;
 
             if (Input.GetMouseButton(1))
             {
-                updateView.FirstViewCameraOn();
+                updateView.ActivateFirstPersonCamera();
+
                 if (!isFirstPerson)
                 {
                     isFirstPerson = true;
-                    ThirdToFirst();
+                    SwitchToFirstPerson();
                 }
+
                 FirstPersonControl();
-                //FaceCameraDirection(transform.forward, firstViewCam);
 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -76,25 +82,20 @@ public class PlayerController : MonoBehaviour
                 }
             } else
             {
-                updateView.ThirdViewCameraOn();
+                updateView.ActivateThirdPersonCamera();
+
                 if(isFirstPerson)
                 {
                     isFirstPerson = false;
-                    updateView.AfterMouseUp(firstViewCam.transform.rotation);
+                    updateView.SwitchToThirdPerson();
                 }
-                ThirdPersonControl();
 
+                ThirdPersonControl();
             }
         }
     }
 
-    private void ThirdToFirst()
-    {
-        mouseX = thirdViewCam.transform.rotation.eulerAngles.y;
-        mouseY = thirdViewCam.transform.rotation.eulerAngles.x;
-
-        transform.rotation = thirdViewCam.transform.rotation;
-    }
+    // Player Shooting
 
     private void OnDrawGizmos()
     {
@@ -113,10 +114,11 @@ public class PlayerController : MonoBehaviour
             {
                 ZombieController shootzombie = hit.collider.GetComponent<ZombieController>();
                 shootzombie.OnHit();
-                //Destroy(hit.collider.gameObject);
             }
         }
     }
+
+    // Collision Detection
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -133,6 +135,11 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.Instance.isGameActive = false;
             playerAnim.SetBool("Run_bool", false);
+
+            transform.LookAt(collision.gameObject.transform);
+            ZombieController zombie = collision.gameObject.GetComponent<ZombieController>();
+            zombie.AttackPlayer(transform);
+
             Debug.Log("GAME OVER");
         }
     }
@@ -145,21 +152,23 @@ public class PlayerController : MonoBehaviour
         }
     }
  
+    // First-Person Movement
+
     private void FirstPersonControl()
     {
-        FirstviewRotate();
-        FirstViewMove();
+        FirstPersonRotation();
+        FirstPersonMoveMent();
     }
 
-    void FaceCameraDirection(Vector3 followObjectForward, GameObject playerOrCamera)
+    private void SwitchToFirstPerson()
     {
-        // When Camera moves, objects move to same direction.
-        Vector3 offset = followObjectForward;
-        offset.y = 0;
-        playerOrCamera.transform.LookAt(playerOrCamera.transform.position + offset);
+        mouseX = thirdViewCam.transform.rotation.eulerAngles.y;
+        mouseY = thirdViewCam.transform.rotation.eulerAngles.x;
+
+        transform.rotation = thirdViewCam.transform.rotation;
     }
 
-    void FirstviewRotate()
+    void FirstPersonRotation()
     {
         mouseX = Input.GetAxis("Mouse X") * turnSpeed * Time.deltaTime;
         mouseY = Input.GetAxis("Mouse Y") * turnSpeed * Time.deltaTime;
@@ -173,14 +182,14 @@ public class PlayerController : MonoBehaviour
         firstViewCam.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
     }
 
-    void FirstViewMove()
+    void FirstPersonMoveMent()
     {
-        h = Input.GetAxisRaw("Horizontal"); 
-        v = Input.GetAxisRaw("Vertical");   
+        horizontalInput = Input.GetAxisRaw("Horizontal"); 
+        verticalInput = Input.GetAxisRaw("Vertical");   
 
-        Vector3 moveVec = transform.forward * v + transform.right * h;
+        Vector3 moveVec = transform.forward * verticalInput + transform.right * horizontalInput;
 
-        if (!(h == 0 && v == 0))
+        if (!(horizontalInput == 0 && verticalInput == 0))
         {
             playerAnim.SetBool("Run_bool", true);
             playerRb.AddForce(moveVec * speed * Time.deltaTime);
@@ -191,16 +200,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Third-Person Movement
+
     private void ThirdPersonControl()
     {
-        Vector2 userInput = PlayerMovement();
+        Vector2 userInput = SavedInputKey();
         Vector3 moveDir = new Vector3(userInput.x, 0, userInput.y);
         moveDir = transform.TransformDirection(moveDir);
 
-        ThirdViewMovement(userInput, moveDir);
+        ThirdPersonMovement(userInput, moveDir);
     }
 
-    Vector2 PlayerMovement()
+    Vector2 SavedInputKey()
     {
         Vector2 inputVector = new Vector2(0, 0);
 
@@ -235,13 +246,20 @@ public class PlayerController : MonoBehaviour
         }
         inputVector = inputVector.normalized;
 
-        FaceCameraDirection(thirdViewCam.transform.forward, gameObject);
+        AlignWithCameraForward();
 
         return inputVector;
     }
 
+    void AlignWithCameraForward()
+    {
+        // When Camera moves, objects move to same direction.
+        Vector3 offset = thirdViewCam.transform.forward;
+        offset.y = 0;
+        transform.LookAt(transform.position + offset);
+    }
 
-    void ThirdViewMovement(Vector3 inputVector, Vector3 moveDir)
+    void ThirdPersonMovement(Vector3 inputVector, Vector3 moveDir)
     {
         if (!(inputVector.x == 0 && inputVector.y == 0))
         {
@@ -256,5 +274,4 @@ public class PlayerController : MonoBehaviour
             transform.rotation = initialRotation;
         }
     }
-
 }

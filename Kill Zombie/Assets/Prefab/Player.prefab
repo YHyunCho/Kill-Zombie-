@@ -71,10 +71,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b36a1f32cd86ae34f96b72ca04c865ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thirdViewCam: {fileID: 7572757884473584739, guid: 9bd1e50284871c340a9c1e0e44d91732, type: 3}
-  firstViewCam: {fileID: 231845016755394669, guid: a3e5fce49e7796d46908ef696dd75bd2, type: 3}
-  isFirstPerson: 0
-  range: 0
+  thirdViewCam: {fileID: 0}
+  firstViewCam: {fileID: 4342438132395333896}
+  zombiePerfab: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
 --- !u!54 &7209878953744879023
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1214,5 +1213,10 @@ PrefabInstance:
 --- !u!4 &3068857578358729735 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1576849329656229218, guid: a3e5fce49e7796d46908ef696dd75bd2, type: 3}
+  m_PrefabInstance: {fileID: 4572523240113471845}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4342438132395333896 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 231845016755394669, guid: a3e5fce49e7796d46908ef696dd75bd2, type: 3}
   m_PrefabInstance: {fileID: 4572523240113471845}
   m_PrefabAsset: {fileID: 0}

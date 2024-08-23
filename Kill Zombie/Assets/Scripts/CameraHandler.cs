@@ -15,17 +15,17 @@ public class CameraHandler : MonoBehaviour
     private float mouseXInput = 0;
     private float mouseYInput = 0;
 
-    private Vector3 mainCamOffset = new Vector3(0, -1.4f, 2.4f);
+    private Vector3 thirdPersonOffset = new Vector3(0, -1.4f, 2.4f);
     private Vector3 deathCamOffset = new Vector3(0, 2.3f, 1.5f);
 
     void Start()
     {
-        ThirdViewCameraOn();
+        ActivateThirdPersonCamera();
 
         deathViewCam.enabled = false;
     }
 
-    public void FirstViewCameraOn()
+    public void ActivateFirstPersonCamera()
     {
         thirdViewCam.enabled = false;
         firstViewCam.enabled = true;
@@ -33,42 +33,42 @@ public class CameraHandler : MonoBehaviour
         crosshair.enabled = true;
     }
 
-    public void ThirdViewCameraOn()
+    public void ActivateThirdPersonCamera()
     {
         thirdViewCam.enabled = true;
         firstViewCam.enabled = false;
 
         crosshair.enabled = false;
 
-        CameraMove(thirdViewCam, mainCamOffset);
+        ThirdPersonCameraMovement();
     }
 
-    public void DeathViewCameraOn()
+    public void ActivateDeathCamera()
     {
         thirdViewCam.enabled = false;
-        firstViewCam.enabled = false;
-        deathViewCam.enabled = true;
+        firstViewCam.enabled = true;
+        deathViewCam.enabled = false;
 
         crosshair.enabled = false;
 
-        DeathViewCamTransform();
+        //DeathViewCamTransform();
     }
 
-    void CameraMove(Camera camera, Vector3 offset)
+    void ThirdPersonCameraMovement()
     {
         mouseXInput += Input.GetAxis("Mouse X");
         mouseYInput -= Input.GetAxis("Mouse Y");
 
-        camera.transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
-        camera.transform.position = player.transform.position - camera.transform.rotation * offset;
+        thirdViewCam.transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
+        thirdViewCam.transform.position = player.transform.position - thirdViewCam.transform.rotation * thirdPersonOffset;
     }
 
-    public void AfterMouseUp(Quaternion firstViewCamRotation)
+    public void SwitchToThirdPerson()
     {
-        mouseXInput = firstViewCamRotation.eulerAngles.y;
-        mouseYInput = firstViewCamRotation.eulerAngles.x;
+        mouseXInput = firstViewCam.transform.rotation.eulerAngles.y;
+        mouseYInput = firstViewCam.transform.rotation.eulerAngles.x;
 
-        thirdViewCam.transform.rotation = firstViewCamRotation;
+        thirdViewCam.transform.rotation = firstViewCam.transform.rotation;
     }
 
     void DeathViewCamTransform()

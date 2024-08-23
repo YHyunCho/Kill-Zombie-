@@ -512,11 +512,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1118216919 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4342438132395333896, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
-  m_PrefabInstance: {fileID: 7889995387889730397}
-  m_PrefabAsset: {fileID: 0}
 --- !u!20 &1136385242 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 7572757884473584739, guid: 9bd1e50284871c340a9c1e0e44d91732, type: 3}
@@ -852,18 +847,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
-      propertyPath: range
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
-      propertyPath: zombie
-      value: 
-      objectReference: {fileID: 6763907651135187018, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-    - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
-      propertyPath: firstViewCam
-      value: 
-      objectReference: {fileID: 1118216919}
     - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
       propertyPath: thirdViewCam
       value: 

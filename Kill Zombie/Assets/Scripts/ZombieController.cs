@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ZombieController : MonoBehaviour
 {
+    public Transform player;
     private Animator zombieAnim;
     private bool isAlive = true;
     private float speed = 3;
@@ -15,7 +16,7 @@ public class ZombieController : MonoBehaviour
 
     void Update()
     {
-        if (isAlive)
+        if (isAlive && GameManager.Instance.isGameActive)
         {
             transform.Translate(Vector3.forward * Time.deltaTime * speed);
         }
@@ -42,5 +43,11 @@ public class ZombieController : MonoBehaviour
         yield return new WaitForSeconds(5);
 
         Destroy(gameObject);
+    }
+
+    public void AttackPlayer(Transform player)
+    {
+        transform.LookAt(player);
+        zombieAnim.SetTrigger("Attack");
     }
 }
