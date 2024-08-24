@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class CameraHandler : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class CameraHandler : MonoBehaviour
     private float mouseYInput = 0;
 
     private Vector3 thirdPersonOffset = new Vector3(0, -1.4f, 2.4f);
-    private Vector3 deathCamOffset = new Vector3(0, 2.3f, 1.5f);
+    private Vector3 deathCamOffset = new Vector3(-0.4f, 1.09f, -1f);
 
     void Start()
     {
@@ -43,15 +44,25 @@ public class CameraHandler : MonoBehaviour
         ThirdPersonCameraMovement();
     }
 
-    public void ActivateDeathCamera()
+    public void ActivateDeathCamera(Transform zombie)
     {
         thirdViewCam.enabled = false;
-        firstViewCam.enabled = true;
-        deathViewCam.enabled = false;
+        firstViewCam.enabled = false;
+        deathViewCam.enabled = true;
 
         crosshair.enabled = false;
 
-        //DeathViewCamTransform();
+        deathViewCam.transform.position = zombie.position + deathCamOffset;
+
+        LookAtZombie(zombie);
+    }
+
+    void LookAtZombie(Transform zombie)
+    {
+        Vector3 direction = zombie.position - deathViewCam.transform.position;
+        direction.y = 0;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        deathViewCam.transform.rotation = rotation;
     }
 
     void ThirdPersonCameraMovement()
@@ -71,9 +82,19 @@ public class CameraHandler : MonoBehaviour
         thirdViewCam.transform.rotation = firstViewCam.transform.rotation;
     }
 
-    void DeathViewCamTransform()
+    public void CameraPlayerHitReaction()
     {
-        transform.position = player.transform.position + deathCamOffset;
-        transform.rotation = Quaternion.Euler(45, 180, 0);
+        Vector3 posOffset = new Vector3(-0.5f, -0.7f, 0);
+        Vector3 rotation = new Vector3(0, 0, 90);
+        Quaternion currentRo = deathViewCam.transform.rotation;
+
+        Vector3 vectorCurrentRo = currentRo.eulerAngles;
+        Vector3 deathRo = vectorCurrentRo + rotation;
+
+        Vector3 deathPos = deathViewCam.transform.position + posOffset;
+
+        Debug.Log("Player is dying");
+        deathViewCam.transform.DORotate(deathRo, 1f);
+        deathViewCam.transform.DOMove(deathPos, 1f);
     }
 }

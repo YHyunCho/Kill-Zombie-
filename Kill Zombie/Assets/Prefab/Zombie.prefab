@@ -940,7 +940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6763907651135187018}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.9848078, z: 0, w: -0.17364821}
+  m_LocalRotation: {x: 0, y: 0.4539906, z: 0, w: -0.8910065}
   m_LocalPosition: {x: 0, y: 0, z: 11}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -948,7 +948,7 @@ Transform:
   - {fileID: 4024393363785245471}
   - {fileID: 7660293648644697784}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -145, z: 0}
 --- !u!95 &7654312809880372743
 Animator:
   serializedVersion: 5
@@ -1016,8 +1016,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.3582083, y: 0.97110534, z: 0.34599733}
-  m_Center: {x: -0.000090532005, y: 0.5237422, z: 0.011639357}
+  m_Size: {x: 0.3582083, y: 1.0140247, z: 0.34599733}
+  m_Center: {x: -0.000090539455, y: 0.5022825, z: 0.011639357}
 --- !u!114 &-2070348377208347416
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1030,7 +1030,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d066ce0e971a048bb77dfd0eefae52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 4102871768572969418, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
+  deathCam: {fileID: 3488952056101753452, guid: cf75a95c6e71d22419a376dbd5b6900b, type: 3}
+  isAlive: 1
 --- !u!1 &8168935403997999339
 GameObject:
   m_ObjectHideFlags: 0

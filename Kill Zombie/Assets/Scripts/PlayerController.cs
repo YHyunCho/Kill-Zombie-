@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private float gravityModifer = 2.5f;
 
     // Camera Variables
-    private bool isFirstPerson = false;
+    private bool isFirstView = false;
 
     // Common Variables 
     private float speed = 250000;
@@ -54,12 +54,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.Instance.isGameActive)
-        {
-            updateView.ActivateDeathCamera();
-            playerRb.velocity = Vector3.zero;
-        }
-        else 
+        if (GameManager.Instance.isGameActive)
         {
             initialRotation = transform.rotation;
 
@@ -67,9 +62,9 @@ public class PlayerController : MonoBehaviour
             {
                 updateView.ActivateFirstPersonCamera();
 
-                if (!isFirstPerson)
+                if (!isFirstView)
                 {
-                    isFirstPerson = true;
+                    isFirstView = true;
                     SwitchToFirstPerson();
                 }
 
@@ -80,13 +75,14 @@ public class PlayerController : MonoBehaviour
                     Shoot();
                     playerAnim.SetTrigger("Shoot_trig");
                 }
-            } else
+            }
+            else
             {
                 updateView.ActivateThirdPersonCamera();
 
-                if(isFirstPerson)
+                if (isFirstView)
                 {
-                    isFirstPerson = false;
+                    isFirstView = false;
                     updateView.SwitchToThirdPerson();
                 }
 
@@ -112,8 +108,9 @@ public class PlayerController : MonoBehaviour
             Debug.Log(hit.collider.name);
             if(hit.collider.tag == "Zombie")
             {
-                ZombieController shootzombie = hit.collider.GetComponent<ZombieController>();
-                shootzombie.OnHit();
+                ZombieController zombie = hit.collider.GetComponent<ZombieController>();
+                zombie.OnHit();
+                zombie.isAlive = false;
             }
         }
     }
@@ -126,6 +123,7 @@ public class PlayerController : MonoBehaviour
         {
             isOnStair = true;
             isOnGround = false;
+            playerAnim.SetBool("RunForward_bool", false);
         }
         else if (!collision.gameObject.CompareTag("Stairs"))
         {
@@ -133,14 +131,7 @@ public class PlayerController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Zombie"))
         {
-            GameManager.Instance.isGameActive = false;
-            playerAnim.SetBool("Run_bool", false);
-
-            transform.LookAt(collision.gameObject.transform);
-            ZombieController zombie = collision.gameObject.GetComponent<ZombieController>();
-            zombie.AttackPlayer(transform);
-
-            Debug.Log("GAME OVER");
+            PlayerDeath(collision.gameObject);
         }
     }
 
@@ -150,6 +141,29 @@ public class PlayerController : MonoBehaviour
         {
             isOnStair = false;
         }
+    }
+
+    // When player collide with zombie, it will dead
+
+    private void PlayerDeath(GameObject collideZombie)
+    {
+        ZombieController zombie = collideZombie.GetComponent<ZombieController>();
+        if (zombie.isAlive)
+        {
+            GameManager.Instance.isGameActive = false;
+            updateView.ActivateDeathCamera(collideZombie.transform);
+
+            zombie.AttackPlayer();
+            Invoke("PlayerFall", 0.5f);
+
+            Debug.Log("GAME OVER");
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void PlayerFall()
+    {
+        updateView.CameraPlayerHitReaction();
     }
  
     // First-Person Movement
@@ -192,11 +206,19 @@ public class PlayerController : MonoBehaviour
         if (!(horizontalInput == 0 && verticalInput == 0))
         {
             playerAnim.SetBool("Run_bool", true);
+            if(verticalInput > 0)
+            {
+                playerAnim.SetBool("RunForward_bool", true);
+            } else
+            {
+                playerAnim.SetBool("RunForward_bool", false);
+            }
             playerRb.AddForce(moveVec * speed * Time.deltaTime);
         }
         else
         {
             playerAnim.SetBool("Run_bool", false);
+            playerAnim.SetBool("RunForward_bool", false);
         }
     }
 
@@ -264,6 +286,7 @@ public class PlayerController : MonoBehaviour
         if (!(inputVector.x == 0 && inputVector.y == 0))
         {
             playerAnim.SetBool("Run_bool", true);
+            playerAnim.SetBool("RunForward_bool", true);
 
             playerRb.AddForce(moveDir * speed * Time.deltaTime);
             transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * turnSpeed);
@@ -271,6 +294,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerAnim.SetBool("Run_bool", false);
+            playerAnim.SetBool("RunForward_bool", false);
             transform.rotation = initialRotation;
         }
     }

@@ -90,7 +90,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: m_weapon_run
-  m_Speed: 1
+  m_Speed: 1.2
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6290684574957646224}
@@ -141,7 +141,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Run_bool
+    m_ConditionEvent: RunForward_bool
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3240300695179978345}
@@ -166,7 +166,7 @@ AnimatorController:
   m_Name: weapon_idle
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Run_bool
+  - m_Name: RunForward_bool
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -178,7 +178,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: RunStatic_bool
+  - m_Name: Run_bool
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -205,6 +205,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
+  - m_ConditionMode: 2
+    m_ConditionEvent: RunForward_bool
+    m_EventTreshold: 0
   - m_ConditionMode: 2
     m_ConditionEvent: Run_bool
     m_EventTreshold: 0
@@ -242,7 +245,7 @@ AnimatorStateMachine:
     m_Position: {x: 90, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8824869011438241187}
-    m_Position: {x: 360, y: 270, z: 0}
+    m_Position: {x: 500, y: 100, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8342692458739142495}
     m_Position: {x: 370, y: 180, z: 0}
@@ -314,6 +317,9 @@ AnimatorStateTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
+  - m_ConditionMode: 1
+    m_ConditionEvent: RunForward_bool
+    m_EventTreshold: 0
   - m_ConditionMode: 1
     m_ConditionEvent: Run_bool
     m_EventTreshold: 0
