@@ -10,6 +10,8 @@ TagManager:
   - Zombie
   - Bullet
   - BackGround
+  - FireWood
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - Crosshair
   - Water
   - UI
-  - 
-  - 
+  - FirstPersonUI
+  - ThirdPersonUI
   - 
   - 
   - 

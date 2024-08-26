@@ -940,7 +940,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6763907651135187018}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.4539906, z: 0, w: -0.8910065}
+  m_LocalRotation: {x: 0, y: 0.33380687, z: 0, w: 0.9426415}
   m_LocalPosition: {x: 0, y: 0, z: 11}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -1031,6 +1031,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathCam: {fileID: 3488952056101753452, guid: cf75a95c6e71d22419a376dbd5b6900b, type: 3}
+  player: {fileID: 362986975465890704, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
   isAlive: 1
 --- !u!1 &8168935403997999339
 GameObject:

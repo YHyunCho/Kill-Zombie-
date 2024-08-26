@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5163881330118249517}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,8 +121,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8611362, y: 1.6088836, z: 0.90153503}
-  m_Center: {x: -0.036489487, y: 0.7919084, z: -0.011108398}
+  m_Size: {x: 0.8611362, y: 1.6088836, z: 1.0823536}
+  m_Center: {x: -0.036489487, y: 0.7919084, z: 0.07930088}
 --- !u!65 &5163881330118249517
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1189,7 +1189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1576849329656229218, guid: a3e5fce49e7796d46908ef696dd75bd2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.0925721
+      value: 1.278
       objectReference: {fileID: 0}
     - target: {fileID: 1576849329656229218, guid: a3e5fce49e7796d46908ef696dd75bd2, type: 3}
       propertyPath: m_LocalPosition.z

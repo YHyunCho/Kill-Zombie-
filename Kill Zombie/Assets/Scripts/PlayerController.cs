@@ -109,8 +109,18 @@ public class PlayerController : MonoBehaviour
             if(hit.collider.tag == "Zombie")
             {
                 ZombieController zombie = hit.collider.GetComponent<ZombieController>();
-                zombie.OnHit();
+                if(zombie.isAlive)
+                {
+                    zombie.OnHit();
+                    GameManager.Instance.UpdateBodyCount();
+                    GameManager.Instance.UpdateLevel();
+                }
                 zombie.isAlive = false;
+            } else if(hit.collider.tag == "FireWood") 
+            {
+                Destroy(hit.collider.gameObject);
+                GameManager.Instance.isFireWoodDestroyed = true;
+                GameManager.Instance.UpdateLevel();
             }
         }
     }
@@ -143,7 +153,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // When player collide with zombie, it will dead
+    // When player collides with alive zombie, it will dead
 
     private void PlayerDeath(GameObject collideZombie)
     {
@@ -176,10 +186,7 @@ public class PlayerController : MonoBehaviour
 
     private void SwitchToFirstPerson()
     {
-        mouseX = thirdViewCam.transform.rotation.eulerAngles.y;
-        mouseY = thirdViewCam.transform.rotation.eulerAngles.x;
-
-        transform.rotation = thirdViewCam.transform.rotation;
+        yRotation = thirdViewCam.transform.rotation.eulerAngles.y;
     }
 
     void FirstPersonRotation()

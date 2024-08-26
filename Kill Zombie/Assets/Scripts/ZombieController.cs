@@ -5,13 +5,15 @@ using UnityEngine;
 public class ZombieController : MonoBehaviour
 {
     public GameObject deathCam;
+    public GameObject player;
     private Animator zombieAnim;
-    public bool isAlive = true;
+    public bool isAlive;
     private float speed = 3;
 
     void Start()
     {
         zombieAnim = GetComponent<Animator>();
+        isAlive = true;
     }
 
     void Update()
@@ -48,7 +50,6 @@ public class ZombieController : MonoBehaviour
     public void AttackPlayer()
     {
         LookAtDeathCam();
-        //transform.LookAt(deathCam.transform);
         zombieAnim.SetTrigger("Attack");
     }
 
@@ -58,7 +59,7 @@ public class ZombieController : MonoBehaviour
         direction.y = 0;
 
         Quaternion rotation = Quaternion.LookRotation(direction);
-        //rotation *= Quaternion.Euler(0, 90, 0);
+        rotation *= Quaternion.Euler(0, 90, 0);
 
         transform.rotation = rotation;
     }

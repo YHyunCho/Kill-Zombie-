@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 
 public class CameraHandler : MonoBehaviour
@@ -11,7 +12,8 @@ public class CameraHandler : MonoBehaviour
     public Camera thirdViewCam;
     public Camera deathViewCam;
 
-    public Canvas crosshair;
+    public Text levelText;
+    public Image crosshair;
 
     private float mouseXInput = 0;
     private float mouseYInput = 0;
@@ -30,6 +32,7 @@ public class CameraHandler : MonoBehaviour
     {
         thirdViewCam.enabled = false;
         firstViewCam.enabled = true;
+        levelText.gameObject.SetActive(false);
 
         crosshair.enabled = true;
     }
@@ -38,6 +41,7 @@ public class CameraHandler : MonoBehaviour
     {
         thirdViewCam.enabled = true;
         firstViewCam.enabled = false;
+        levelText.gameObject.SetActive(true);
 
         crosshair.enabled = false;
 
@@ -49,6 +53,7 @@ public class CameraHandler : MonoBehaviour
         thirdViewCam.enabled = false;
         firstViewCam.enabled = false;
         deathViewCam.enabled = true;
+        levelText.gameObject.SetActive(true);
 
         crosshair.enabled = false;
 
