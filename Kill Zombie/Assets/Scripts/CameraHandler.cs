@@ -45,7 +45,7 @@ public class CameraHandler : MonoBehaviour
 
         crosshair.enabled = false;
 
-        ThirdPersonCameraMovement();
+        //ThirdPersonCameraMovement();
     }
 
     public void ActivateDeathCamera(Transform zombie)
@@ -70,22 +70,22 @@ public class CameraHandler : MonoBehaviour
         deathViewCam.transform.rotation = rotation;
     }
 
-    void ThirdPersonCameraMovement()
-    {
-        mouseXInput += Input.GetAxis("Mouse X");
-        mouseYInput -= Input.GetAxis("Mouse Y");
+    //void ThirdPersonCameraMovement()
+    //{
+    //    mouseXInput += Input.GetAxis("Mouse X");
+    //    mouseYInput -= Input.GetAxis("Mouse Y");
 
-        thirdViewCam.transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
-        thirdViewCam.transform.position = player.transform.position - thirdViewCam.transform.rotation * thirdPersonOffset;
-    }
+    //    thirdViewCam.transform.rotation = Quaternion.Euler(mouseYInput, mouseXInput, 0);
+    //    thirdViewCam.transform.position = player.transform.position - thirdViewCam.transform.rotation * thirdPersonOffset;
+    //}
 
-    public void SwitchToThirdPerson()
-    {
-        mouseXInput = firstViewCam.transform.rotation.eulerAngles.y;
-        mouseYInput = firstViewCam.transform.rotation.eulerAngles.x;
+    //public void SwitchToThirdPerson()
+    //{
+    //    mouseXInput = firstViewCam.transform.rotation.eulerAngles.y;
+    //    mouseYInput = firstViewCam.transform.rotation.eulerAngles.x;
 
-        thirdViewCam.transform.rotation = firstViewCam.transform.rotation;
-    }
+    //    thirdViewCam.transform.rotation = firstViewCam.transform.rotation;
+    //}
 
     public void CameraPlayerHitReaction()
     {

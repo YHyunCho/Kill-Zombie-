@@ -374,6 +374,7 @@
 "Assets/Scripts/GameManager.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/SpawnManager.cs"
+"Assets/Scripts/ThirdPersonCamera.cs"
 "Assets/Scripts/ZombieController.cs"
 -langversion:9.0
 /deterministic

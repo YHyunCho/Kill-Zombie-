@@ -26,7 +26,7 @@ public class ZombieController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject && isAlive)
+        if (collision.gameObject && isAlive && !collision.gameObject.CompareTag("Player"))
         {
             transform.Rotate(0, Random.Range(90, 270), 0);
         }
@@ -55,11 +55,10 @@ public class ZombieController : MonoBehaviour
 
     void LookAtDeathCam()
     {
-        Vector3 direction = deathCam.transform.position - transform.position;
+        Vector3 direction = transform.position - deathCam.transform.position;
         direction.y = 0;
 
         Quaternion rotation = Quaternion.LookRotation(direction);
-        rotation *= Quaternion.Euler(0, 90, 0);
 
         transform.rotation = rotation;
     }

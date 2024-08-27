@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CameraHandler updateView;
+    private ThirdPersonCamera thirdPersonCam;
 
     private Rigidbody playerRb;
     private Animator playerAnim;
@@ -47,6 +48,7 @@ public class PlayerController : MonoBehaviour
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         updateView = GameObject.Find("Cameras").GetComponent<CameraHandler>();
+        thirdPersonCam = GameObject.Find("ThridViewCam").GetComponent<ThirdPersonCamera>();
         
         playerRb.freezeRotation = true;
         Physics.gravity *= gravityModifer;
@@ -83,7 +85,7 @@ public class PlayerController : MonoBehaviour
                 if (isFirstView)
                 {
                     isFirstView = false;
-                    updateView.SwitchToThirdPerson();
+                    thirdPersonCam.SwitchToThirdPerson();
                 }
 
                 ThirdPersonControl();
