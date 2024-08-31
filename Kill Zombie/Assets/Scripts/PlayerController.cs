@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
         Physics.gravity *= gravityModifer;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (GameManager.Instance.isGameActive)
         {
