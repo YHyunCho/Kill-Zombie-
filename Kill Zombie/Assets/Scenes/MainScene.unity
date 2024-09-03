@@ -267,6 +267,7 @@ MonoBehaviour:
   - {fileID: 676028150557829203, guid: effaaa665bce18747b546d1bc5c10965, type: 3}
   - {fileID: 6360420542703049433, guid: 8fcb9d2d43929c04f8c70c38581418d4, type: 3}
   levelText: {fileID: 1171040509}
+  isLevelUp: 0
   isGameActive: 1
   isFireWoodDestroyed: 0
   isHitByBullet: 0
@@ -431,7 +432,6 @@ MonoBehaviour:
   cameraCollision:
     serializedVersion: 2
     m_Bits: 1
-  speed: 1
   range: 2
 --- !u!1 &1171040507
 GameObject:

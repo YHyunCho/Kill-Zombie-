@@ -15,10 +15,9 @@ public class CameraHandler : MonoBehaviour
     public Text levelText;
     public Image crosshair;
 
-    private float mouseXInput = 0;
-    private float mouseYInput = 0;
+    //private float mouseXInput = 0;
+    //private float mouseYInput = 0;
 
-    private Vector3 thirdPersonOffset = new Vector3(0, -1.4f, 2.4f);
     private Vector3 deathCamOffset = new Vector3(-0.4f, 1.09f, -1f);
 
     void Start()
@@ -44,8 +43,6 @@ public class CameraHandler : MonoBehaviour
         levelText.gameObject.SetActive(true);
 
         crosshair.enabled = false;
-
-        ThirdPersonCameraMovement();
     }
 
     public void ActivateDeathCamera(Transform zombie)
@@ -68,13 +65,6 @@ public class CameraHandler : MonoBehaviour
         direction.y = 0;
         Quaternion rotation = Quaternion.LookRotation(direction);
         deathViewCam.transform.rotation = rotation;
-    }
-
-    void ThirdPersonCameraMovement()
-    {
-        Vector3 offset = new Vector3(0, 1.4f, -2.4f);
-
-        thirdViewCam.transform.position = player.transform.position + thirdViewCam.transform.rotation * offset;
     }
 
     //public void SwitchToThirdPerson()

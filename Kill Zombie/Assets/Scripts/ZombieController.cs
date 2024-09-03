@@ -55,7 +55,7 @@ public class ZombieController : MonoBehaviour
 
     void LookAtDeathCam()
     {
-        Vector3 direction = transform.position - deathCam.transform.position;
+        Vector3 direction = deathCam.transform.position - transform.position;
         direction.y = 0;
 
         Quaternion rotation = Quaternion.LookRotation(direction);

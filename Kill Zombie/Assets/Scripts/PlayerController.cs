@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         {
             initialRotation = transform.rotation;
 
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(1) && !GameManager.Instance.isLevelUp)
             {
                 updateView.ActivateFirstPersonCamera();
 
@@ -77,8 +77,10 @@ public class PlayerController : MonoBehaviour
                     Shoot();
                     playerAnim.SetTrigger("Shoot_trig");
                 }
-            }
-            else
+            } else if(GameManager.Instance.isLevelUp && Input.GetMouseButtonUp(1))
+            {
+                GameManager.Instance.isLevelUp = false;
+            } else
             {
                 updateView.ActivateThirdPersonCamera();
 

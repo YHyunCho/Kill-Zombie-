@@ -8,12 +8,12 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(SpawnZombie());
+        //StartCoroutine(SpawnZombie());
     }
 
     IEnumerator SpawnZombie()
     {
-        while(GameManager.Instance.isGameActive)
+        while(GameManager.Instance.isGameActive && GameManager.Instance.zombieCount < 21)
         {
             yield return new WaitForSeconds(GameManager.Instance.spawnZombieRate);
 

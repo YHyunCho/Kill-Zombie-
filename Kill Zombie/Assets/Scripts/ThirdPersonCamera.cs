@@ -8,18 +8,25 @@ public class ThirdPersonCamera : MonoBehaviour
     public Camera firstViewCam;
 
     public LayerMask cameraCollision;
-    private Vector3 thirdPersonOffset = new Vector3(0, -1.7f, 1.5f);
+    Vector3 offset = new Vector3(0, 1.4f, -2.4f);
 
     private float mouseXInput = 0;
     private float mouseYInput = 0;
     private float xRotation = 0;
     private float yRotation = 0;
-    [SerializeField] private float speed = 0;
+    private float speed = 1;
 
     public float range = 2;
 
+    private void Start()
+    {
+        offset = transform.position - player.transform.position;
+    }
+
     private void LateUpdate()
     {
+        transform.position = player.transform.position + transform.rotation * offset;
+
         Quaternion currentRotation = Quaternion.Euler(xRotation, yRotation, 0);
 
         mouseXInput = Input.GetAxis("Mouse X");
@@ -32,39 +39,27 @@ public class ThirdPersonCamera : MonoBehaviour
 
         Quaternion destination = Quaternion.Euler(xRotation, yRotation, 0);
 
-
-        transform.rotation = Quaternion.Slerp(currentRotation, destination, 1);
+        transform.rotation = Quaternion.Slerp(currentRotation, destination, speed);
         CheckCollision();
-        //transform.position = player.transform.position - transform.rotation * thirdPersonOffset;
     }
 
     private void OnDrawGizmos()
     {
-        //Vector3 rayDir = player.transform.position - transform.position;
         Vector3 rayDir = transform.position - player.transform.position;
 
         Gizmos.color = Color.green;
         Gizmos.DrawRay(player.transform.position, rayDir * range);
-        //Gizmos.DrawRay(transform.position, -rayDir * range);
     }
 
     private void CheckCollision()
     {
         Vector3 rayDir = transform.position - player.transform.position;
 
-        //if (Physics.Raycast(transform.position, -rayDir, out RaycastHit hitForward, range, cameraCollision))
-        //{
-        //    //transform.position = hitForward.point - rayDir.normalized;
-        //    transform.Translate((transform.position - hitForward.point) * Time.deltaTime * speed, Space.World);
-        //}
         if (Physics.Raycast(player.transform.position, rayDir, out RaycastHit hitBack, range, cameraCollision))
         {
             Debug.Log("Ray with " + hitBack.collider.name);
 
-            transform.position = hitBack.point - rayDir.normalized;
-            //transform.position.x = player.transform.position.x;
-            //transform.Translate((hitBack.point - rayDir.normalized) * Time.deltaTime * speed, Space.World);
-
+            transform.position = new Vector3(transform.position.x, transform.position.y, hitBack.point.z - rayDir.normalized.z);
         } 
     }
 
@@ -73,6 +68,6 @@ public class ThirdPersonCamera : MonoBehaviour
         mouseXInput = firstViewCam.transform.rotation.eulerAngles.y;
         mouseYInput = firstViewCam.transform.rotation.eulerAngles.x;
 
-        transform.rotation = transform.rotation;
+        transform.rotation = firstViewCam.transform.rotation;
     }
 }

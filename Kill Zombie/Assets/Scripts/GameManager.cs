@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameObject[] fireWoodPrefabs;
     public Text levelText;
+    public bool isLevelUp;
+
+    private CameraHandler swichCamera;
 
     public bool isGameActive = true;
     public bool isFireWoodDestroyed;
@@ -38,6 +41,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        swichCamera = GameObject.Find("Cameras").GetComponent<CameraHandler>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -84,6 +89,8 @@ public class GameManager : MonoBehaviour
             } else if (level < 6)
             {
                 levelText.text = "Level " + level;
+                isLevelUp = true;
+                swichCamera.ActivateThirdPersonCamera();
                 SpawnFireWood();
             }
         }
