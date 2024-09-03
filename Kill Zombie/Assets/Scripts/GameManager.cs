@@ -8,11 +8,12 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameObject[] fireWoodPrefabs;
     public Text levelText;
+    public Text startCountText;
     public bool isLevelUp;
 
     private CameraHandler swichCamera;
 
-    public bool isGameActive = true;
+    public bool isGameActive = false;
     public bool isFireWoodDestroyed;
     public bool isHitByBullet;
     public string currentCamera;
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour
     public Vector3[] randomPosition = new[] {new Vector3(0, 0.38f, -11.358f), new Vector3(0, 0.38f, 11.358f),
                                              new Vector3(6.15f, 0.38f, -12.21f), new Vector3(6.15f, 0.38f, 12.21f),
                                              new Vector3(-6.15f, 0.38f, -12.21f), new Vector3(-6.15f, 0.38f, 12.21f)};
+
+    private int startCnt;
 
     private void Awake()
     {
@@ -46,11 +49,38 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        isGameActive = false;
+        startCnt = 3;
         level = 1;
         spawnZombieRate = 2.5f;
         levelText.text = "Level " + level;
 
+        startCountText.gameObject.SetActive(true);
+        StartCoroutine(StartCount());
+    }
+
+    public void GameStart()
+    {
+        isGameActive = true;
         SpawnFireWood();
+    }
+
+    IEnumerator StartCount()
+    {
+        while (startCnt > -1)
+        {
+            yield return new WaitForSeconds(1);
+
+            startCountText.text = "" + startCnt;
+
+            startCnt -= 1;
+
+            if(startCnt == -1)
+            {
+                startCountText.gameObject.SetActive(false);
+                GameStart();
+            }
+        }
     }
 
     public void GameOver()

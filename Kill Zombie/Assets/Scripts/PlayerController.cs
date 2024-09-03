@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
 
     // Third Person Variables
     private Quaternion initialRotation;
-    private float stairForce = 120;
+    private float stairForce = 60;
     private float jumpForce = 550;
 
     // First Person Variables

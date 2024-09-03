@@ -25,22 +25,25 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.position = player.transform.position + transform.rotation * offset;
+        if (GameManager.Instance.isGameActive)
+        {
+            transform.position = player.transform.position + transform.rotation * offset;
 
-        Quaternion currentRotation = Quaternion.Euler(xRotation, yRotation, 0);
+            Quaternion currentRotation = Quaternion.Euler(xRotation, yRotation, 0);
 
-        mouseXInput = Input.GetAxis("Mouse X");
-        mouseYInput = Input.GetAxis("Mouse Y");
+            mouseXInput = Input.GetAxis("Mouse X");
+            mouseYInput = Input.GetAxis("Mouse Y");
 
-        xRotation -= mouseYInput;
-        yRotation += mouseXInput;
+            xRotation -= mouseYInput;
+            yRotation += mouseXInput;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        Quaternion destination = Quaternion.Euler(xRotation, yRotation, 0);
+            Quaternion destination = Quaternion.Euler(xRotation, yRotation, 0);
 
-        transform.rotation = Quaternion.Slerp(currentRotation, destination, speed);
-        CheckCollision();
+            transform.rotation = Quaternion.Slerp(currentRotation, destination, speed);
+            CheckCollision();
+        }
     }
 
     private void OnDrawGizmos()
