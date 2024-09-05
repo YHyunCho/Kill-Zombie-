@@ -6,13 +6,16 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
     public GameObject[] fireWoodPrefabs;
     public Text levelText;
     public Text startCountText;
-    public bool isLevelUp;
+    public Text gameOverText;
+    public Text playerWinText;
 
     private CameraHandler swichCamera;
 
+    public bool isLevelUp;
     public bool isGameActive = false;
     public bool isFireWoodDestroyed;
     public bool isHitByBullet;
@@ -86,6 +89,13 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         isGameActive = false;
+        gameOverText.gameObject.SetActive(true);
+    }
+
+    public void PlayerWin()
+    {
+        isGameActive = false;
+        playerWinText.gameObject.SetActive(true);
     }
 
     void SpawnFireWood()
@@ -113,7 +123,7 @@ public class GameManager : MonoBehaviour
 
             if (level == 6)
             {
-                GameOver();
+                PlayerWin();
                 Debug.Log("You Win!");
 
             } else if (level < 6)

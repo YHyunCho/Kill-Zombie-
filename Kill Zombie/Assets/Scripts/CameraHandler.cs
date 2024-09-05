@@ -25,6 +25,7 @@ public class CameraHandler : MonoBehaviour
         ActivateThirdPersonCamera();
 
         deathViewCam.enabled = false;
+        deathCamOffset = new Vector3(player.transform.position.x, deathCamOffset.y, deathCamOffset.z);
     }
 
     public void ActivateFirstPersonCamera()
@@ -66,14 +67,6 @@ public class CameraHandler : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(direction);
         deathViewCam.transform.rotation = rotation;
     }
-
-    //public void SwitchToThirdPerson()
-    //{
-    //    mouseXInput = firstViewCam.transform.rotation.eulerAngles.y;
-    //    mouseYInput = firstViewCam.transform.rotation.eulerAngles.x;
-
-    //    thirdViewCam.transform.rotation = firstViewCam.transform.rotation;
-    //}
 
     public void CameraPlayerHitReaction()
     {

@@ -372,6 +372,7 @@
 "Assets/Library/Zombie/Scripts/ZombieFree.cs"
 "Assets/Scripts/CameraHandler.cs"
 "Assets/Scripts/GameManager.cs"
+"Assets/Scripts/MenuUIHandler.cs"
 "Assets/Scripts/PlayerController.cs"
 "Assets/Scripts/SpawnManager.cs"
 "Assets/Scripts/ThirdPersonCamera.cs"

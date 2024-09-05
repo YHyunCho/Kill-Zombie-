@@ -165,19 +165,26 @@ public class PlayerController : MonoBehaviour
         if (zombie.isAlive)
         {
             GameManager.Instance.isGameActive = false;
-            updateView.ActivateDeathCamera(collideZombie.transform);
-
             zombie.AttackPlayer();
+
+            updateView.ActivateDeathCamera(collideZombie.transform);
             Invoke("PlayerFall", 0.5f);
 
             Debug.Log("GAME OVER");
             gameObject.SetActive(false);
+
+            Invoke("PlayerLose", 1.5f);
         }
     }
 
     private void PlayerFall()
     {
         updateView.CameraPlayerHitReaction();
+    }
+
+    private void PlayerLose()
+    {
+        GameManager.Instance.GameOver();
     }
  
     // First-Person Movement

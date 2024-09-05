@@ -8,7 +8,7 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
-        //StartCoroutine(SpawnZombie());
+        StartCoroutine(SpawnZombie());
     }
 
     IEnumerator SpawnZombie()
