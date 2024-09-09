@@ -5,22 +5,24 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject zombiePrefab;
+    private MainManager mainManager;
 
     private void Start()
     {
-        StartCoroutine(SpawnZombie());
+        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
+        //StartCoroutine(SpawnZombie());
     }
 
     IEnumerator SpawnZombie()
     {
-        while(GameManager.Instance.isGameActive && GameManager.Instance.zombieCount < 21)
+        while(mainManager.isGameActive && mainManager.zombieCount < 21)
         {
-            yield return new WaitForSeconds(GameManager.Instance.spawnZombieRate);
+            yield return new WaitForSeconds(mainManager.spawnZombieRate);
 
             zombiePrefab.transform.eulerAngles = new Vector3(0, Random.Range(0, 364), 0);
             Instantiate(zombiePrefab, gameObject.transform.position, zombiePrefab.transform.rotation);
 
-            GameManager.Instance.zombieCount += 1;
+            mainManager.zombieCount += 1;
         }
     }
 }

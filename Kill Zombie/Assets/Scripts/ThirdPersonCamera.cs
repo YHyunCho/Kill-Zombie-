@@ -5,6 +5,7 @@ using UnityEngine;
 public class ThirdPersonCamera : MonoBehaviour
 {
     public GameObject player;
+    public MainManager mainManager;
     public Camera firstViewCam;
 
     public LayerMask cameraCollision;
@@ -25,7 +26,7 @@ public class ThirdPersonCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (GameManager.Instance.isGameActive)
+        if (mainManager.isGameActive)
         {
             transform.position = player.transform.position + transform.rotation * offset;
 

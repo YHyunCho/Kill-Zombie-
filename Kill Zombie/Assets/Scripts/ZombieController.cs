@@ -6,6 +6,7 @@ public class ZombieController : MonoBehaviour
 {
     public GameObject deathCam;
     public GameObject player;
+    private MainManager mainManager;
     private Animator zombieAnim;
     public bool isAlive;
     private float speed = 3;
@@ -13,12 +14,13 @@ public class ZombieController : MonoBehaviour
     void Start()
     {
         zombieAnim = GetComponent<Animator>();
+        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         isAlive = true;
     }
 
     void Update()
     {
-        if (isAlive && GameManager.Instance.isGameActive)
+        if (isAlive && mainManager.isGameActive)
         {
             transform.Translate(Vector3.forward * Time.deltaTime * speed);
         }

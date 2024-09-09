@@ -15,9 +15,6 @@ public class CameraHandler : MonoBehaviour
     public Text levelText;
     public Image crosshair;
 
-    //private float mouseXInput = 0;
-    //private float mouseYInput = 0;
-
     private Vector3 deathCamOffset = new Vector3(-0.4f, 1.09f, -1f);
 
     void Start()

@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: f647da1b09e4405488b3a93db3c8a634, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -122,6 +122,77 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &155871086
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 155871088}
+  - component: {fileID: 155871087}
+  m_Layer: 0
+  m_Name: MainManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &155871087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155871086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d7829213186f5543bdc798fcdf9ca7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fireWoodPrefabs:
+  - {fileID: 5987572886358014243, guid: 923791c7c386b014dab87eb63f30018d, type: 3}
+  - {fileID: 5933200329339262740, guid: 123eaecb0dcde6d4e94428d554d1f6c9, type: 3}
+  - {fileID: 7539522403395165278, guid: cfd52433c2081db47b83623fd9394d6f, type: 3}
+  - {fileID: 676028150557829203, guid: effaaa665bce18747b546d1bc5c10965, type: 3}
+  - {fileID: 6360420542703049433, guid: 8fcb9d2d43929c04f8c70c38581418d4, type: 3}
+  levelText: {fileID: 1171040509}
+  startCountText: {fileID: 1384506263}
+  gameOverText: {fileID: 772661121}
+  playerWinText: {fileID: 761365640}
+  isLevelUp: 0
+  isGameActive: 0
+  isFireWoodDestroyed: 0
+  isHitByBullet: 0
+  currentCamera: 
+  level: 0
+  killCount: 0
+  zombieCount: 0
+  spawnZombieRate: 0
+  fireWoodPosition: {x: 0, y: 0, z: 0}
+  randomPosition:
+  - {x: 0, y: 0.38, z: -11.358}
+  - {x: 0, y: 0.38, z: 11.358}
+  - {x: 6.15, y: 0.38, z: -12.21}
+  - {x: 6.15, y: 0.38, z: 12.21}
+  - {x: -6.15, y: 0.38, z: -12.21}
+  - {x: -6.15, y: 0.38, z: 12.21}
+--- !u!4 &155871088
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 155871086}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 42.792126, y: -24.836647, z: -41.39653}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &289469489 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 166958302460296217, guid: 9bd1e50284871c340a9c1e0e44d91732, type: 3}
@@ -260,33 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6012dfe4be6054489e3af54ffb3ca1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireWoodPrefabs:
-  - {fileID: 5987572886358014243, guid: 923791c7c386b014dab87eb63f30018d, type: 3}
-  - {fileID: 5933200329339262740, guid: 123eaecb0dcde6d4e94428d554d1f6c9, type: 3}
-  - {fileID: 7539522403395165278, guid: cfd52433c2081db47b83623fd9394d6f, type: 3}
-  - {fileID: 676028150557829203, guid: effaaa665bce18747b546d1bc5c10965, type: 3}
-  - {fileID: 6360420542703049433, guid: 8fcb9d2d43929c04f8c70c38581418d4, type: 3}
-  levelText: {fileID: 1171040509}
-  startCountText: {fileID: 1384506263}
-  gameOverText: {fileID: 772661121}
-  playerWinText: {fileID: 761365640}
-  isLevelUp: 0
-  isGameActive: 1
-  isFireWoodDestroyed: 0
-  isHitByBullet: 0
-  currentCamera: 
-  level: 1
-  killCount: 0
-  zombieCount: 0
-  spawnZombieRate: 2
-  fireWoodPosition: {x: 0, y: 0, z: 0}
-  randomPosition:
-  - {x: 0, y: 0.38, z: -11.358}
-  - {x: 0, y: 0.38, z: 11.358}
-  - {x: 6.15, y: 0.38, z: -12.21}
-  - {x: 6.15, y: 0.38, z: 12.21}
-  - {x: -6.15, y: 0.38, z: -12.21}
-  - {x: -6.15, y: 0.38, z: 12.21}
+  userName: 
 --- !u!4 &645356635
 Transform:
   m_ObjectHideFlags: 0
@@ -472,67 +517,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 772661119}
   m_CullTransparentMesh: 1
---- !u!1001 &861862944
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -2070348377208347416, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6763907651135187018, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_Name
-      value: Zombie
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.22027424
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6.66
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.02533642
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.99967897
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: -177.096
-      objectReference: {fileID: 0}
-    - target: {fileID: 7798837544662780247, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 457bc5ca2d08d1a4ab90df012b010bf2, type: 3}
 --- !u!1 &993516921
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8442623690933318274}
+  mainManager: {fileID: 155871087}
   firstViewCam: {fileID: 2019418557}
   cameraCollision:
     serializedVersion: 2
@@ -1272,6 +1257,10 @@ PrefabInstance:
       value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
+      propertyPath: mainManager
+      value: 
+      objectReference: {fileID: 155871087}
+    - target: {fileID: 161684965605224706, guid: 7b18f2fa950c1484b9bf5a9637345c9f, type: 3}
       propertyPath: thirdViewCam
       value: 
       objectReference: {fileID: 1136385242}
@@ -1602,13 +1591,13 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 645356635}
+  - {fileID: 155871088}
   - {fileID: 315136621}
   - {fileID: 1896188974}
   - {fileID: 993516925}
   - {fileID: 9143049163415256455}
   - {fileID: 7889995387889730397}
-  - {fileID: 1338042865}
-  - {fileID: 645356635}
   - {fileID: 1634347174}
   - {fileID: 7098948410946815088}
-  - {fileID: 861862944}
+  - {fileID: 1338042865}

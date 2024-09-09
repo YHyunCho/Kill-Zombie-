@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private CameraHandler updateView;
     private ThirdPersonCamera thirdPersonCam;
+    public MainManager mainManager;
 
     private Rigidbody playerRb;
     private Animator playerAnim;
@@ -56,11 +57,11 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (GameManager.Instance.isGameActive)
+        if (mainManager.isGameActive)
         {
             initialRotation = transform.rotation;
 
-            if (Input.GetMouseButton(1) && !GameManager.Instance.isLevelUp)
+            if (Input.GetMouseButton(1) && !mainManager.isLevelUp)
             {
                 updateView.ActivateFirstPersonCamera();
 
@@ -77,9 +78,9 @@ public class PlayerController : MonoBehaviour
                     Shoot();
                     playerAnim.SetTrigger("Shoot_trig");
                 }
-            } else if(GameManager.Instance.isLevelUp && Input.GetMouseButtonUp(1))
+            } else if(mainManager.isLevelUp && Input.GetMouseButtonUp(1))
             {
-                GameManager.Instance.isLevelUp = false;
+                mainManager.isLevelUp = false;
             } else
             {
                 updateView.ActivateThirdPersonCamera();
@@ -116,15 +117,15 @@ public class PlayerController : MonoBehaviour
                 if(zombie.isAlive)
                 {
                     zombie.OnHit();
-                    GameManager.Instance.UpdateBodyCount();
-                    GameManager.Instance.UpdateLevel();
+                    mainManager.UpdateBodyCount();
+                    mainManager.UpdateLevel();
                 }
                 zombie.isAlive = false;
             } else if(hit.collider.tag == "FireWood") 
             {
                 Destroy(hit.collider.gameObject);
-                GameManager.Instance.isFireWoodDestroyed = true;
-                GameManager.Instance.UpdateLevel();
+                mainManager.isFireWoodDestroyed = true;
+                mainManager.UpdateLevel();
             }
         }
     }
@@ -164,7 +165,7 @@ public class PlayerController : MonoBehaviour
         ZombieController zombie = collideZombie.GetComponent<ZombieController>();
         if (zombie.isAlive)
         {
-            GameManager.Instance.isGameActive = false;
+            mainManager.isGameActive = false;
             zombie.AttackPlayer();
 
             updateView.ActivateDeathCamera(collideZombie.transform);
@@ -184,7 +185,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerLose()
     {
-        GameManager.Instance.GameOver();
+        mainManager.GameOver();
     }
  
     // First-Person Movement
