@@ -10,6 +10,7 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
+        //RandomZombie();
         //StartCoroutine(SpawnZombie());
     }
 
@@ -19,10 +20,15 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(mainManager.spawnZombieRate);
 
-            zombiePrefab.transform.eulerAngles = new Vector3(0, Random.Range(0, 364), 0);
-            Instantiate(zombiePrefab, gameObject.transform.position, zombiePrefab.transform.rotation);
-
-            mainManager.zombieCount += 1;
+            RandomZombie();
         }
+    }
+
+    void RandomZombie()
+    {
+        zombiePrefab.transform.eulerAngles = new Vector3(0, Random.Range(0, 364), 0);
+        Instantiate(zombiePrefab, gameObject.transform.position, zombiePrefab.transform.rotation);
+
+        mainManager.zombieCount += 1;
     }
 }

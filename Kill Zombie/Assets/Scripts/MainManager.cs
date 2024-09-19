@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using UnityEngine.SceneManagement;
 
 public class MainManager : MonoBehaviour
 {
@@ -14,7 +12,6 @@ public class MainManager : MonoBehaviour
     public Text startCountText;
     public Text gameOverText;
     public Text playerWinText;
-    public Text nameText;
 
     private CameraHandler swichCamera;
 
@@ -31,7 +28,8 @@ public class MainManager : MonoBehaviour
     public float spawnZombieRate;
 
     public Vector3 fireWoodPosition;
-    public Vector3[] randomPosition = new[] {new Vector3(0, 0.38f, -11.358f), new Vector3(0, 0.38f, 11.358f),
+    public List<Vector3> randomPosition = new List<Vector3>() 
+                                            {new Vector3(0, 0.38f, -11.358f), new Vector3(0, 0.38f, 11.358f),
                                              new Vector3(6.15f, 0.38f, -12.21f), new Vector3(6.15f, 0.38f, 12.21f),
                                              new Vector3(-6.15f, 0.38f, -12.21f), new Vector3(-6.15f, 0.38f, 12.21f)};
 
@@ -44,13 +42,11 @@ public class MainManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        nameText.text = GameManager.Instance.userName;
-
         isGameActive = false;
         startCnt = 3;
         timer = 0;
         level = 1;
-        spawnZombieRate = 2.5f;
+        spawnZombieRate = 3.0f;
         levelText.text = "Level " + level;
 
         startCountText.gameObject.SetActive(true);
@@ -95,28 +91,35 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         isGameActive = false;
+        gameOverText.text = "Game Over\n\n" + GameManager.Instance.userName + ", You Reached Level " + level + "\nBetter Luck Next Time!";
+        
         gameOverText.gameObject.SetActive(true);
+        quitButton.gameObject.SetActive(true);
+        levelText.gameObject.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void PlayerWin()
     {
         isGameActive = false;
+        swichCamera.ActivateThirdPersonCamera();
+        playerWinText.text = "Congratulation, " + GameManager.Instance.userName + "!\nYou Win!\n\nYou Completed Level 5 in " + timer + "Seconds"; 
+        
         playerWinText.gameObject.SetActive(true);
         quitButton.gameObject.SetActive(true);
+        levelText.gameObject.SetActive(false);
 
-        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        GameManager.Instance.SaveScore(timer);
     }
 
     public void ClickQuitButton()
     {
-        GameManager.Instance.SaveScore(timer);
-
-#if UNITY_EDITOR
-        EditorApplication.ExitPlaymode();
-#else
-        Application.Quit();
-#endif
+        SceneManager.LoadScene(0);
     }
 
     void SpawnFireWood()
@@ -124,8 +127,11 @@ public class MainManager : MonoBehaviour
         killCount = 0;
         zombieCount = 0;
         isFireWoodDestroyed = false;
-        fireWoodPosition = randomPosition[Random.Range(0, randomPosition.Length)];
+
+        fireWoodPosition = randomPosition[Random.Range(0, randomPosition.Count-1)];
         Instantiate(fireWoodPrefabs[level - 1], fireWoodPosition, fireWoodPrefabs[level - 1].transform.rotation);
+
+        randomPosition.Remove(fireWoodPosition);
     }
 
     public void UpdateBodyCount()

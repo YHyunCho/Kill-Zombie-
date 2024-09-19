@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-    public Dictionary<string, int> userScore = new Dictionary<string, int>();
 
     public string userName;
     public string topUserName;
@@ -27,18 +25,9 @@ public class GameManager : MonoBehaviour
         LoadScore();
     }
 
-    private void Start()
-    {
-        foreach (KeyValuePair<string, int> entry in userScore)
-        {
-            Debug.Log("Key : " + entry.Key + ", Valye : " + entry.Value);
-        }
-    }
-
     [System.Serializable]
     class SaveData
     {
-        //public Dictionary<string, int> userScore = new Dictionary<string, int>();
         public string topUserName;
         public int time;
     }
@@ -47,11 +36,15 @@ public class GameManager : MonoBehaviour
     {
         SaveData data = new SaveData();
 
-        if (data.time < time)
+        if(data.time == 0)
         {
             data.time = time;
             data.topUserName = userName;
-        }
+        } else if (data.time > time)
+        {
+            data.time = time;
+            data.topUserName = userName;
+        } 
 
         string json = JsonUtility.ToJson(data);
 

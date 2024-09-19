@@ -81,6 +81,7 @@ public class PlayerController : MonoBehaviour
             } else if(mainManager.isLevelUp && Input.GetMouseButtonUp(1))
             {
                 mainManager.isLevelUp = false;
+                ThirdPersonControl();
             } else
             {
                 updateView.ActivateThirdPersonCamera();
