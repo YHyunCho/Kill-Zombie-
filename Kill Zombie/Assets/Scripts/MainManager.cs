@@ -2,14 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class MainManager : MonoBehaviour
 {
     public GameObject[] fireWoodPrefabs;
+    public Button quitButton;
     public Text levelText;
     public Text startCountText;
     public Text gameOverText;
     public Text playerWinText;
+    public Text nameText;
 
     private CameraHandler swichCamera;
 
@@ -19,6 +24,7 @@ public class MainManager : MonoBehaviour
     public bool isHitByBullet;
     public string currentCamera;
 
+    public int timer = 0;
     public int level;
     public int killCount;
     public int zombieCount;
@@ -38,8 +44,11 @@ public class MainManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        nameText.text = GameManager.Instance.userName;
+
         isGameActive = false;
         startCnt = 3;
+        timer = 0;
         level = 1;
         spawnZombieRate = 2.5f;
         levelText.text = "Level " + level;
@@ -52,6 +61,7 @@ public class MainManager : MonoBehaviour
     {
         isGameActive = true;
         SpawnFireWood();
+        StartCoroutine(StartTimer());
     }
 
     IEnumerator StartCount()
@@ -72,6 +82,16 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    IEnumerator StartTimer()
+    {
+        while (isGameActive)
+        {
+            yield return new WaitForSeconds(1);
+
+            timer += 1;
+        }
+    }
+
     public void GameOver()
     {
         isGameActive = false;
@@ -82,6 +102,21 @@ public class MainManager : MonoBehaviour
     {
         isGameActive = false;
         playerWinText.gameObject.SetActive(true);
+        quitButton.gameObject.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+    }
+
+    public void ClickQuitButton()
+    {
+        GameManager.Instance.SaveScore(timer);
+
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif
     }
 
     void SpawnFireWood()
