@@ -10,7 +10,7 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-        //RandomZombie();
+        RandomZombie();
         //StartCoroutine(SpawnZombie());
     }
 

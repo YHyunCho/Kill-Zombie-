@@ -36,11 +36,7 @@ public class GameManager : MonoBehaviour
     {
         SaveData data = new SaveData();
 
-        if(data.time == 0)
-        {
-            data.time = time;
-            data.topUserName = userName;
-        } else if (data.time > time)
+        if (score > time || score == 0)
         {
             data.time = time;
             data.topUserName = userName;

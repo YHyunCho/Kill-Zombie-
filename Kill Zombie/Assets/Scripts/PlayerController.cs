@@ -10,10 +10,13 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody playerRb;
     private Animator playerAnim;
+    private AudioSource playerAudio;
 
     public Camera thirdViewCam;
     public GameObject firstViewCam;
     public Transform zombiePerfab;
+    public AudioClip shootSound;
+    public AudioClip shootObjectSound;
 
     private float gravityModifer = 2.5f;
 
@@ -48,6 +51,8 @@ public class PlayerController : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
+        playerAudio = GetComponent<AudioSource>();
+
         updateView = GameObject.Find("Cameras").GetComponent<CameraHandler>();
         thirdPersonCam = GameObject.Find("ThridViewCam").GetComponent<ThirdPersonCamera>();
         
@@ -76,7 +81,6 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetMouseButtonDown(0))
                 {
                     Shoot();
-                    playerAnim.SetTrigger("Shoot_trig");
                 }
             } else if(mainManager.isLevelUp && Input.GetMouseButtonUp(1))
             {
@@ -115,18 +119,27 @@ public class PlayerController : MonoBehaviour
             if(hit.collider.tag == "Zombie")
             {
                 ZombieController zombie = hit.collider.GetComponent<ZombieController>();
+                
+                playerAudio.PlayOneShot(shootSound, 1.0f);
+
                 if(zombie.isAlive)
                 {
-                    zombie.OnHit();
+                    zombie.OnHit(hit.point);
                     mainManager.UpdateBodyCount();
                     mainManager.UpdateLevel();
                 }
                 zombie.isAlive = false;
+
             } else if(hit.collider.tag == "FireWood") 
             {
+                playerAudio.PlayOneShot(shootObjectSound, 1.0f);
                 Destroy(hit.collider.gameObject);
                 mainManager.isFireWoodDestroyed = true;
                 mainManager.UpdateLevel();
+
+            } else
+            {
+                playerAudio.PlayOneShot(shootSound, 1.0f);
             }
         }
     }

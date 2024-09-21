@@ -6,14 +6,20 @@ public class ZombieController : MonoBehaviour
 {
     public GameObject deathCam;
     public GameObject player;
+
+    public ParticleSystem bloodParticle;
+
     private MainManager mainManager;
     private Animator zombieAnim;
+    private AudioSource zombieAudio;
+
     public bool isAlive;
     private float speed = 3;
 
     void Start()
     {
         zombieAnim = GetComponent<Animator>();
+        zombieAudio = GetComponent<AudioSource>();
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         isAlive = true;
     }
@@ -34,9 +40,11 @@ public class ZombieController : MonoBehaviour
         }
     }
 
-    public void OnHit()
+    public void OnHit(Vector3 hitPoint)
     {
         zombieAnim.SetTrigger("Dead");
+        bloodParticle.transform.position = hitPoint;
+        bloodParticle.Play();
         isAlive = false;
 
         StartCoroutine(DestroyZombie());
@@ -44,7 +52,7 @@ public class ZombieController : MonoBehaviour
 
     IEnumerator DestroyZombie()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2.5f);
 
         Destroy(gameObject);
     }
@@ -52,6 +60,7 @@ public class ZombieController : MonoBehaviour
     public void AttackPlayer()
     {
         LookAtDeathCam();
+        zombieAudio.Play();
         zombieAnim.SetTrigger("Attack");
     }
 

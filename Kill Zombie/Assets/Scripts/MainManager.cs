@@ -13,6 +13,12 @@ public class MainManager : MonoBehaviour
     public Text gameOverText;
     public Text playerWinText;
 
+    public AudioClip levelupSound;
+    public AudioClip timerSound;
+    public AudioClip winSound;
+
+    private AudioSource mainAudio;
+    private AudioSource mainSound;
     private CameraHandler swichCamera;
 
     public bool isLevelUp;
@@ -29,7 +35,7 @@ public class MainManager : MonoBehaviour
 
     public Vector3 fireWoodPosition;
     public List<Vector3> randomPosition = new List<Vector3>() 
-                                            {new Vector3(0, 0.38f, -11.358f), new Vector3(0, 0.38f, 11.358f),
+                                            {new Vector3(0, 0.38f, 11.358f),
                                              new Vector3(6.15f, 0.38f, -12.21f), new Vector3(6.15f, 0.38f, 12.21f),
                                              new Vector3(-6.15f, 0.38f, -12.21f), new Vector3(-6.15f, 0.38f, 12.21f)};
 
@@ -38,6 +44,8 @@ public class MainManager : MonoBehaviour
     private void Start()
     {
         swichCamera = GameObject.Find("Cameras").GetComponent<CameraHandler>();
+        mainSound = GameObject.Find("MainSound").GetComponent<AudioSource>();
+        mainAudio = GetComponent<AudioSource>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -56,6 +64,7 @@ public class MainManager : MonoBehaviour
     public void GameStart()
     {
         isGameActive = true;
+        mainSound.Play();
         SpawnFireWood();
         StartCoroutine(StartTimer());
     }
@@ -74,6 +83,9 @@ public class MainManager : MonoBehaviour
             {
                 startCountText.gameObject.SetActive(false);
                 GameStart();
+            } else
+            {
+                mainAudio.PlayOneShot(timerSound, 1.0f);
             }
         }
     }
@@ -104,8 +116,9 @@ public class MainManager : MonoBehaviour
     public void PlayerWin()
     {
         isGameActive = false;
+        mainAudio.PlayOneShot(winSound, 1.0f);
         swichCamera.ActivateThirdPersonCamera();
-        playerWinText.text = "Congratulation, " + GameManager.Instance.userName + "!\nYou Win!\n\nYou Completed Level 5 in " + timer + "Seconds"; 
+        playerWinText.text = "Congratulation, " + GameManager.Instance.userName + "!\nYou Win!\n\nYou Completed Level 5 in " + timer + " Seconds"; 
         
         playerWinText.gameObject.SetActive(true);
         quitButton.gameObject.SetActive(true);
@@ -119,6 +132,7 @@ public class MainManager : MonoBehaviour
 
     public void ClickQuitButton()
     {
+        GameManager.Instance.LoadScore();
         SceneManager.LoadScene(0);
     }
 
@@ -158,6 +172,7 @@ public class MainManager : MonoBehaviour
             {
                 levelText.text = "Level " + level;
                 isLevelUp = true;
+                mainAudio.PlayOneShot(levelupSound, 1.0f);
                 swichCamera.ActivateThirdPersonCamera();
                 SpawnFireWood();
             }
