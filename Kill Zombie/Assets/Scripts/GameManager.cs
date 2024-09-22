@@ -40,11 +40,11 @@ public class GameManager : MonoBehaviour
         {
             data.time = time;
             data.topUserName = userName;
+
+            string json = JsonUtility.ToJson(data);
+
+            File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
         } 
-
-        string json = JsonUtility.ToJson(data);
-
-        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
 
     public void LoadScore()

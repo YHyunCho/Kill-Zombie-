@@ -47,22 +47,12 @@ public class ThirdPersonCamera : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
-    {
-        Vector3 rayDir = transform.position - player.transform.position;
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawRay(player.transform.position, rayDir * range);
-    }
-
     private void CheckCollision()
     {
         Vector3 rayDir = transform.position - player.transform.position;
 
         if (Physics.Raycast(player.transform.position, rayDir, out RaycastHit hitBack, range, cameraCollision))
         {
-            Debug.Log("Ray with " + hitBack.collider.name);
-
             transform.position = new Vector3(transform.position.x, transform.position.y, hitBack.point.z - rayDir.normalized.z);
         } 
     }

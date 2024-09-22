@@ -8,13 +8,24 @@ public class MenuUIHandler : MonoBehaviour
 {
     public InputField inputName;
     public Text topPlayer;
+
     public AudioClip clickSound;
+    public AudioClip warnSound;
+
+    public GameObject menuUI;
+    public GameObject howtoplay;
+    public GameObject warning;
 
     private AudioSource mainSound;
 
     void Start()
     {
         mainSound = GetComponent<AudioSource>();
+
+        if (GameManager.Instance.userName != "")
+        {
+            inputName.text = GameManager.Instance.userName;
+        }
 
         if (GameManager.Instance.score != 0)
         {
@@ -32,17 +43,33 @@ public class MenuUIHandler : MonoBehaviour
 
         if (GameManager.Instance.userName != "")
         {
-            Debug.Log("User Name : " + GameManager.Instance.userName);
+            warning.gameObject.SetActive(false);
             SceneManager.LoadScene(1);
             
         } else  
         {
-            Debug.Log("Enter User Name");
+            warning.gameObject.SetActive(true);
+            mainSound.PlayOneShot(warnSound, 1.0f);
         }
     }
 
     public void InputUserName()
     {
         GameManager.Instance.userName = inputName.text;
+    }
+
+    public void ClickHowToPlayButton()
+    {
+        warning.gameObject.SetActive(false);
+        menuUI.gameObject.SetActive(false);
+        howtoplay.gameObject.SetActive(true);
+        mainSound.PlayOneShot(clickSound, 1.0f);
+    }
+
+    public void ExitHowToPlay()
+    {
+        menuUI.gameObject.SetActive(true);
+        howtoplay.gameObject.SetActive(false);
+        mainSound.PlayOneShot(clickSound, 1.0f);
     }
 }

@@ -61,7 +61,9 @@ public class CameraHandler : MonoBehaviour
     {
         Vector3 direction = zombie.position - deathViewCam.transform.position;
         direction.y = 0;
+
         Quaternion rotation = Quaternion.LookRotation(direction);
+        
         deathViewCam.transform.rotation = rotation;
     }
 
@@ -76,8 +78,17 @@ public class CameraHandler : MonoBehaviour
 
         Vector3 deathPos = deathViewCam.transform.position + posOffset;
 
-        Debug.Log("Player is dying");
         deathViewCam.transform.DORotate(deathRo, 1f);
         deathViewCam.transform.DOMove(deathPos, 1f);
+    }
+
+    public void PlayerWinReaction()
+    {
+        Vector3 offset = new Vector3(0, 2, 1.3f);
+        Vector3 rotation = new Vector3(40, 180, 0);
+        Vector3 cameraPos = player.transform.position + offset;
+
+        thirdViewCam.transform.DOMove(cameraPos, 1f);
+        thirdViewCam.transform.DORotate(rotation, 1f);
     }
 }

@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
             {
                 mainManager.isLevelUp = false;
                 ThirdPersonControl();
+
             } else
             {
                 updateView.ActivateThirdPersonCamera();
@@ -99,16 +100,15 @@ public class PlayerController : MonoBehaviour
 
                 ThirdPersonControl();
             }
+        } else
+        {
+            playerRb.velocity = Vector3.zero;
+            playerAnim.SetBool("Run_bool", false);
+            playerAnim.SetBool("RunForward_bool", false);
         }
     }
 
     // Player Shooting
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(firstViewCam.transform.position, firstViewCam.transform.forward * range);
-    }
 
     public void Shoot()
     {
@@ -116,7 +116,6 @@ public class PlayerController : MonoBehaviour
         
         if (Physics.Raycast(firstViewCam.transform.position, firstViewCam.transform.forward, out hit, range))
         {
-            Debug.Log(hit.collider.name);
             if(hit.collider.tag == "Zombie")
             {
                 ZombieController zombie = hit.collider.GetComponent<ZombieController>();
@@ -129,6 +128,7 @@ public class PlayerController : MonoBehaviour
                     mainManager.UpdateBodyCount();
                     mainManager.UpdateLevel();
                 }
+
                 zombie.isAlive = false;
 
             } else if(hit.collider.tag == "FireWood") 
@@ -186,9 +186,7 @@ public class PlayerController : MonoBehaviour
             updateView.ActivateDeathCamera(collideZombie.transform);
             Invoke("PlayerFall", 0.5f);
 
-            Debug.Log("GAME OVER");
             gameObject.SetActive(false);
-
             Invoke("PlayerLose", 1.5f);
         }
     }

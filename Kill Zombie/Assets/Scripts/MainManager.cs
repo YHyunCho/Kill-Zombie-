@@ -16,6 +16,7 @@ public class MainManager : MonoBehaviour
     public AudioClip levelupSound;
     public AudioClip timerSound;
     public AudioClip winSound;
+    public AudioClip clickSound;
 
     private AudioSource mainAudio;
     private AudioSource mainSound;
@@ -116,6 +117,9 @@ public class MainManager : MonoBehaviour
     public void PlayerWin()
     {
         isGameActive = false;
+
+        swichCamera.PlayerWinReaction();
+
         mainAudio.PlayOneShot(winSound, 1.0f);
         swichCamera.ActivateThirdPersonCamera();
         playerWinText.text = "Congratulation, " + GameManager.Instance.userName + "!\nYou Win!\n\nYou Completed Level 5 in " + timer + " Seconds"; 
@@ -132,6 +136,7 @@ public class MainManager : MonoBehaviour
 
     public void ClickQuitButton()
     {
+        mainAudio.PlayOneShot(clickSound, 1.0f);
         GameManager.Instance.LoadScore();
         SceneManager.LoadScene(0);
     }
@@ -151,7 +156,6 @@ public class MainManager : MonoBehaviour
     public void UpdateBodyCount()
     {
         killCount += 1;
-        Debug.Log("You killed : " + killCount + ", Spawned Zombie : " + zombieCount);
     }
 
     public void UpdateLevel()
@@ -165,7 +169,6 @@ public class MainManager : MonoBehaviour
             if (level == 6)
             {
                 PlayerWin();
-                Debug.Log("You Win!");
 
             }
             else if (level < 6)
