@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour
         thirdPersonCam = GameObject.Find("ThridViewCam").GetComponent<ThirdPersonCamera>();
         
         playerRb.freezeRotation = true;
+        Physics.gravity = new Vector3(0, -9.81f, 0);
         Physics.gravity *= gravityModifer;
     }
 
