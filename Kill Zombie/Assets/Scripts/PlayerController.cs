@@ -5,7 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CameraHandler updateView;
-    private ThirdPersonCamera thirdPersonCam;
+    private ThirdPersonCamera thirdPersonCamSc;
+    private FirstPersonCamera firstPersonCamSc;
     public MainManager mainManager;
 
     private Rigidbody playerRb;
@@ -13,12 +14,12 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerAudio;
 
     public Camera thirdViewCam;
-    public GameObject firstViewCam;
+    public Camera firstViewCam;
     public Transform zombiePerfab;
     public AudioClip shootSound;
     public AudioClip shootObjectSound;
 
-    private float gravityModifer = 2.5f;
+    private float gravityModifer = 3.0f;
 
     // Camera Variables
     private bool isFirstView = false;
@@ -31,14 +32,6 @@ public class PlayerController : MonoBehaviour
     private Quaternion initialRotation;
     private float stairForce = 60;
     private float jumpForce = 550;
-
-    // First Person Variables
-    private float xRotation;
-    private float yRotation;
-    private float mouseX;
-    private float mouseY;
-    private float horizontalInput;
-    private float verticalInput;
 
     // Collision Detection Variables
     private bool isOnGround = true;
@@ -54,8 +47,11 @@ public class PlayerController : MonoBehaviour
         playerAudio = GetComponent<AudioSource>();
 
         updateView = GameObject.Find("Cameras").GetComponent<CameraHandler>();
-        thirdPersonCam = GameObject.Find("ThridViewCam").GetComponent<ThirdPersonCamera>();
-        
+        thirdPersonCamSc = thirdViewCam.GetComponent<ThirdPersonCamera>();
+        firstPersonCamSc = firstViewCam.GetComponent<FirstPersonCamera>();
+
+        isFirstView = false;
+
         playerRb.freezeRotation = true;
         Physics.gravity = new Vector3(0, -9.81f, 0);
         Physics.gravity *= gravityModifer;
@@ -74,19 +70,19 @@ public class PlayerController : MonoBehaviour
                 if (!isFirstView)
                 {
                     isFirstView = true;
-                    SwitchToFirstPerson();
+                    firstPersonCamSc.SwitchTo(thirdViewCam);
                 }
 
-                FirstPersonControl();
+                PlayerControl();
 
                 if (Input.GetMouseButtonDown(0))
                 {
                     Shoot();
                 }
-            } else if(mainManager.isLevelUp && Input.GetMouseButtonUp(1))
+            } else if (mainManager.isLevelUp && Input.GetMouseButtonUp(1))
             {
                 mainManager.isLevelUp = false;
-                ThirdPersonControl();
+                PlayerControl();
 
             } else
             {
@@ -95,10 +91,10 @@ public class PlayerController : MonoBehaviour
                 if (isFirstView)
                 {
                     isFirstView = false;
-                    thirdPersonCam.SwitchToThirdPerson();
+                    thirdPersonCamSc.SwitchTo(firstViewCam);
                 }
 
-                ThirdPersonControl();
+                PlayerControl();
             }
         } else
         {
@@ -203,49 +199,24 @@ public class PlayerController : MonoBehaviour
  
     // First-Person Movement
 
-    private void FirstPersonControl()
-    {
-        FirstPersonRotation();
-        FirstPersonMoveMent();
-    }
-
-    private void SwitchToFirstPerson()
-    {
-        yRotation = thirdViewCam.transform.rotation.eulerAngles.y;
-    }
-
     void FirstPersonRotation()
     {
-        mouseX = Input.GetAxis("Mouse X") * turnSpeed * Time.deltaTime;
-        mouseY = Input.GetAxis("Mouse Y") * turnSpeed * Time.deltaTime;
-
-        xRotation -= mouseY;
-        yRotation += mouseX;
-
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-        transform.rotation = Quaternion.Euler(0, yRotation, 0);
-        firstViewCam.transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        transform.rotation = Quaternion.Euler(firstViewCam.transform.rotation.eulerAngles.x, firstViewCam.transform.rotation.eulerAngles.y, 0);
     }
 
-    void FirstPersonMoveMent()
+    void FirstPersonMoveMent(Vector2 userInput, Vector3 moveDir)
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal"); 
-        verticalInput = Input.GetAxisRaw("Vertical");   
-
-        Vector3 moveVec = transform.forward * verticalInput + transform.right * horizontalInput;
-
-        if (!(horizontalInput == 0 && verticalInput == 0))
+        if (!(userInput.x == 0 && userInput.y == 0))
         {
             playerAnim.SetBool("Run_bool", true);
-            if(verticalInput > 0)
+            if(userInput.y > 0)
             {
                 playerAnim.SetBool("RunForward_bool", true);
             } else
             {
                 playerAnim.SetBool("RunForward_bool", false);
             }
-            playerRb.AddForce(moveVec * speed * Time.deltaTime);
+            playerRb.AddForce(moveDir * speed * Time.deltaTime);
         }
         else
         {
@@ -256,13 +227,19 @@ public class PlayerController : MonoBehaviour
 
     // Third-Person Movement
 
-    private void ThirdPersonControl()
+    private void PlayerControl()
     {
         Vector2 userInput = SavedInputKey();
         Vector3 moveDir = new Vector3(userInput.x, 0, userInput.y);
         moveDir = transform.TransformDirection(moveDir);
 
-        ThirdPersonMovement(userInput, moveDir);
+        if(thirdViewCam.enabled)
+        {
+            ThirdPersonMovement(userInput, moveDir);
+        } else if(firstViewCam.enabled)
+        {
+            FirstPersonMoveMent(userInput, moveDir);
+        }
     }
 
     Vector2 SavedInputKey()
@@ -300,7 +277,13 @@ public class PlayerController : MonoBehaviour
         }
         inputVector = inputVector.normalized;
 
-        AlignWithCameraForward();
+        if(thirdViewCam.enabled)
+        {
+            AlignWithCameraForward();
+        } else if(firstViewCam.enabled)
+        {
+            FirstPersonRotation();
+        }
 
         return inputVector;
     }
@@ -327,7 +310,10 @@ public class PlayerController : MonoBehaviour
         {
             playerAnim.SetBool("Run_bool", false);
             playerAnim.SetBool("RunForward_bool", false);
-            transform.rotation = initialRotation;
+
+            Vector3 rotation = initialRotation.eulerAngles;
+            rotation.x = 0;
+            transform.rotation = Quaternion.Euler(rotation);
         }
     }
 }

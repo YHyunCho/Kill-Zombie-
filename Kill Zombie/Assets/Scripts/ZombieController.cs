@@ -6,6 +6,7 @@ public class ZombieController : MonoBehaviour
 {
     public GameObject deathCam;
     public GameObject player;
+    private Rigidbody zombieRb;
 
     public ParticleSystem bloodParticle;
 
@@ -20,6 +21,7 @@ public class ZombieController : MonoBehaviour
     {
         zombieAnim = GetComponent<Animator>();
         zombieAudio = GetComponent<AudioSource>();
+        zombieRb = GetComponent<Rigidbody>();
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         isAlive = true;
     }
@@ -43,9 +45,12 @@ public class ZombieController : MonoBehaviour
     public void OnHit(Vector3 hitPoint)
     {
         zombieAnim.SetTrigger("Dead");
+
         bloodParticle.transform.position = hitPoint;
         bloodParticle.Play();
+        
         isAlive = false;
+        zombieRb.isKinematic = true;
 
         StartCoroutine(DestroyZombie());
     }

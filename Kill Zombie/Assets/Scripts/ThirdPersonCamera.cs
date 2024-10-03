@@ -1,50 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
-public class ThirdPersonCamera : MonoBehaviour
+public class ThirdPersonCamera : CameraMovement
 {
-    public GameObject player;
-    public MainManager mainManager;
-    public Camera firstViewCam;
-
     public LayerMask cameraCollision;
-    Vector3 offset = new Vector3(0, 1.4f, -2.4f);
-
-    private float mouseXInput = 0;
-    private float mouseYInput = 0;
-    private float xRotation = 0;
-    private float yRotation = 0;
-    private float speed = 1;
-
-    public float range = 2;
-
-    private void Start()
-    {
-        offset = transform.position - player.transform.position;
-    }
 
     private void LateUpdate()
     {
-        if (mainManager.isGameActive)
-        {
-            transform.position = player.transform.position + transform.rotation * offset;
-
-            Quaternion currentRotation = Quaternion.Euler(xRotation, yRotation, 0);
-
-            mouseXInput = Input.GetAxis("Mouse X");
-            mouseYInput = Input.GetAxis("Mouse Y");
-
-            xRotation -= mouseYInput;
-            yRotation += mouseXInput;
-
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
-            Quaternion destination = Quaternion.Euler(xRotation, yRotation, 0);
-
-            transform.rotation = Quaternion.Slerp(currentRotation, destination, speed);
-            CheckCollision();
-        }
+        CameraRotation();
+        CheckCollision();
     }
 
     private void CheckCollision()
@@ -57,11 +23,14 @@ public class ThirdPersonCamera : MonoBehaviour
         } 
     }
 
-    public void SwitchToThirdPerson()
+    public void PlayerWinReaction()
     {
-        mouseXInput = firstViewCam.transform.rotation.eulerAngles.y;
-        mouseYInput = firstViewCam.transform.rotation.eulerAngles.x;
+        Vector3 offset = new Vector3(0, 2, 1.3f);
+        Vector3 rotation = new Vector3(40, 180, 0);
+        Vector3 cameraPos = player.transform.position + offset;
 
-        transform.rotation = firstViewCam.transform.rotation;
+        transform.DOMove(cameraPos, 1f);
+        transform.DORotate(rotation, 1f);
     }
+
 }

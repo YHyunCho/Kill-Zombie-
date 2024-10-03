@@ -20,13 +20,13 @@ public class MainManager : MonoBehaviour
 
     private AudioSource mainAudio;
     private AudioSource mainSound;
+
     private CameraHandler swichCamera;
+    private ThirdPersonCamera thirdPersonCamera;
 
     public bool isLevelUp;
     public bool isGameActive = false;
     public bool isFireWoodDestroyed;
-    public bool isHitByBullet;
-    public string currentCamera;
 
     public int timer = 0;
     public int level;
@@ -45,6 +45,7 @@ public class MainManager : MonoBehaviour
     private void Start()
     {
         swichCamera = GameObject.Find("Cameras").GetComponent<CameraHandler>();
+        thirdPersonCamera = GameObject.Find("ThirdViewCam").GetComponent<ThirdPersonCamera>();
         mainSound = GameObject.Find("MainSound").GetComponent<AudioSource>();
         mainAudio = GetComponent<AudioSource>();
 
@@ -118,7 +119,7 @@ public class MainManager : MonoBehaviour
     {
         isGameActive = false;
 
-        swichCamera.PlayerWinReaction();
+        thirdPersonCamera.PlayerWinReaction();
 
         mainAudio.PlayOneShot(winSound, 1.0f);
         swichCamera.ActivateThirdPersonCamera();

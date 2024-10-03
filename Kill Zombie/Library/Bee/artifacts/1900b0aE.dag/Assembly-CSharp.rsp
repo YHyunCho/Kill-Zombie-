@@ -371,6 +371,8 @@
 "Assets/Library/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUnityVersion.cs"
 "Assets/Library/Plugins/Demigiant/DOTween/Modules/DOTweenModuleUtils.cs"
 "Assets/Scripts/CameraHandler.cs"
+"Assets/Scripts/CameraMovement.cs"
+"Assets/Scripts/FirstPersonCamera.cs"
 "Assets/Scripts/GameManager.cs"
 "Assets/Scripts/MainManager.cs"
 "Assets/Scripts/MenuUIHandler.cs"

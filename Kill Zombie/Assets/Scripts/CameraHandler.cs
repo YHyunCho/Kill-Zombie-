@@ -53,18 +53,7 @@ public class CameraHandler : MonoBehaviour
         crosshair.enabled = false;
 
         deathViewCam.transform.position = zombie.position + deathCamOffset;
-
         LookAtZombie(zombie);
-    }
-
-    void LookAtZombie(Transform zombie)
-    {
-        Vector3 direction = zombie.position - deathViewCam.transform.position;
-        direction.y = 0;
-
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        
-        deathViewCam.transform.rotation = rotation;
     }
 
     public void CameraPlayerHitReaction()
@@ -82,13 +71,13 @@ public class CameraHandler : MonoBehaviour
         deathViewCam.transform.DOMove(deathPos, 1f);
     }
 
-    public void PlayerWinReaction()
+    public void LookAtZombie(Transform zombie)
     {
-        Vector3 offset = new Vector3(0, 2, 1.3f);
-        Vector3 rotation = new Vector3(40, 180, 0);
-        Vector3 cameraPos = player.transform.position + offset;
+        Vector3 direction = zombie.position - deathViewCam.transform.position;
+        direction.y = 0;
 
-        thirdViewCam.transform.DOMove(cameraPos, 1f);
-        thirdViewCam.transform.DORotate(rotation, 1f);
+        Quaternion rotation = Quaternion.LookRotation(direction);
+
+        transform.rotation = rotation;
     }
 }
