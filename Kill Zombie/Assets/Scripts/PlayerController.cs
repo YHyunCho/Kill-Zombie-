@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     // Player Shooting Variable
     private float range = 30;
+    public GameObject bulletHole;
 
     void Start()
     {
@@ -137,6 +138,7 @@ public class PlayerController : MonoBehaviour
             } else
             {
                 playerAudio.PlayOneShot(shootSound, 1.0f);
+                Instantiate(bulletHole, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal));
             }
         }
     }
